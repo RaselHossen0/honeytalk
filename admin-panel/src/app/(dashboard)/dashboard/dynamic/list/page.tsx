@@ -105,6 +105,37 @@ export default function DynamicListPage() {
     }
   };
 
+  const stickyFirst = {
+    position: 'sticky' as const,
+    left: 0,
+    zIndex: 3,
+    minWidth: 48,
+    width: 48,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyId = {
+    position: 'sticky' as const,
+    left: 48,
+    zIndex: 3,
+    minWidth: 70,
+    width: 70,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyLast = {
+    position: 'sticky' as const,
+    right: 0,
+    zIndex: 3,
+    minWidth: 100,
+    width: 100,
+    bgcolor: 'grey.50',
+    boxShadow: '-2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyFirstBody = (bg: string) => ({ ...stickyFirst, zIndex: 2, bgcolor: bg });
+  const stickyIdBody = (bg: string) => ({ ...stickyId, zIndex: 2, bgcolor: bg });
+  const stickyLastBody = (bg: string) => ({ ...stickyLast, zIndex: 2, bgcolor: bg });
+
   return (
     <Box>
       <Paper sx={{ p: 2, mb: 2, borderRadius: 2 }}>
@@ -188,12 +219,12 @@ export default function DynamicListPage() {
       </Paper>
 
       <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 2 }}>
-        <TableContainer sx={{ maxHeight: 520, overflowX: 'auto' }}>
-          <Table size="small" stickyHeader>
+        <TableContainer sx={{ maxHeight: 520, overflowX: 'auto', overflowY: 'auto', width: '100%' }}>
+          <Table size="small" stickyHeader sx={{ minWidth: 1600 }}>
             <TableHead>
               <TableRow sx={{ bgcolor: 'grey.50' }}>
-                <TableCell padding="checkbox" sx={{ fontWeight: 600 }} />
-                <TableCell sx={{ fontWeight: 600, minWidth: 70 }}>ID</TableCell>
+                <TableCell padding="checkbox" sx={{ ...stickyFirst, fontWeight: 600 }} />
+                <TableCell sx={{ ...stickyId, fontWeight: 600 }}>ID</TableCell>
                 <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>User ID</TableCell>
                 <TableCell sx={{ fontWeight: 600, minWidth: 130 }}>User nickname</TableCell>
                 <TableCell sx={{ fontWeight: 600, minWidth: 150 }}>Publish Content</TableCell>
@@ -205,15 +236,15 @@ export default function DynamicListPage() {
                 <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Is it pinned?</TableCell>
                 <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Status</TableCell>
                 <TableCell sx={{ fontWeight: 600, minWidth: 160 }}>Release time</TableCell>
-                <TableCell sx={{ fontWeight: 600, minWidth: 80 }} align="right">
+                <TableCell sx={{ ...stickyLast, fontWeight: 600 }} align="right">
                   Operation
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedRows.map((row) => (
+              {paginatedRows.map((row, index) => (
                 <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" sx={stickyFirstBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
                     <Checkbox
                       checked={selected.includes(row.id)}
                       onChange={(e) => {
@@ -222,7 +253,9 @@ export default function DynamicListPage() {
                       }}
                     />
                   </TableCell>
-                  <TableCell>{row.id}</TableCell>
+                  <TableCell sx={stickyIdBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                    {row.id}
+                  </TableCell>
                   <TableCell>{row.userId}</TableCell>
                   <TableCell>{row.userNickname}</TableCell>
                   <TableCell sx={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.publishContent}</TableCell>
@@ -246,7 +279,7 @@ export default function DynamicListPage() {
                   <TableCell>{row.isPinned}</TableCell>
                   <TableCell>{row.status}</TableCell>
                   <TableCell>{row.releaseTime}</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="right" sx={{ ...stickyLastBody(index % 2 === 1 ? 'grey.50' : 'background.paper'), whiteSpace: 'nowrap' }}>
                     <Button
                       size="small"
                       variant="outlined"
