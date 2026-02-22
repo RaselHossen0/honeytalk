@@ -21,14 +21,17 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  ToggleButtonGroup,
+  ToggleButton,
+  Typography,
 } from '@mui/material';
 import { Search, Clear, Add } from '@mui/icons-material';
 import { useTabsStore } from '@/store/tabs';
 import type { ManualRechargeRecord } from '@/types/fund';
 import { demoManualRechargeRecords } from '@/lib/demo-data';
 
-const VIRTUAL_CURRENCY_OPTIONS = ['All', 'Diamond'];
-const TYPE_OPTIONS = ['All', 'Recharge', 'Deduction'];
+const VIRTUAL_CURRENCY_OPTIONS = ['All', 'Coin', 'Diamond'];
+const TYPE_OPTIONS = ['All', 'Add', 'Reduce'];
 
 export default function ManualRechargePage() {
   const addTab = useTabsStore((s) => s.addTab);
@@ -36,7 +39,13 @@ export default function ManualRechargePage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [addOpen, setAddOpen] = useState(false);
-  const [addForm, setAddForm] = useState({ userId: '', amount: '', note: '' });
+  const [addForm, setAddForm] = useState({
+    userId: '',
+    numberOfChanges: '',
+    virtualCurrency: 'Diamond' as 'Coin' | 'Diamond',
+    type: 'Add' as 'Add' | 'Reduce',
+    accountLog: '',
+  });
   const [filters, setFilters] = useState({
     userId: '',
     virtualCurrency: 'All',
@@ -58,6 +67,14 @@ export default function ManualRechargePage() {
     let result = [...data];
     if (filters.userId.trim()) {
       result = result.filter((r) => String(r.userId).includes(filters.userId));
+    }
+    if (filters.virtualCurrency !== 'All') {
+      result = result.filter((r) => r.numberOfChanges.includes(filters.virtualCurrency));
+    }
+    if (filters.type !== 'All') {
+      result = result.filter((r) =>
+        filters.type === 'Add' ? r.numberOfChanges.startsWith('+') : r.numberOfChanges.startsWith('-')
+      );
     }
     if (filters.addTimeStart) {
       result = result.filter((r) => r.addTime >= filters.addTimeStart);
@@ -85,24 +102,32 @@ export default function ManualRechargePage() {
   };
 
   const handleAdd = () => {
-    setAddForm({ userId: '', amount: '', note: '' });
+    setAddForm({
+      userId: '',
+      numberOfChanges: '',
+      virtualCurrency: 'Diamond',
+      type: 'Add',
+      accountLog: '',
+    });
     setAddOpen(true);
   };
   const handleAddClose = () => setAddOpen(false);
   const handleAddSubmit = () => {
     const userId = parseInt(addForm.userId, 10);
-    const amount = parseInt(addForm.amount, 10);
-    if (!userId || !amount || amount <= 0) return;
+    const amount = Math.abs(parseInt(addForm.numberOfChanges, 10) || 0);
+    if (!userId || !amount) return;
     const nextNum = Math.max(...data.map((r) => r.number), 0) + 1;
+    const prefix = addForm.type === 'Add' ? '+ ' : '- ';
+    const currency = addForm.virtualCurrency;
     const newRecord: ManualRechargeRecord = {
       id: Math.max(...data.map((r) => r.id), 0) + 1,
       number: nextNum,
       userId,
       userNickname: `User${userId} (${userId})`,
-      numberOfChanges: `+ ${amount.toLocaleString()} Diamond`,
-      changeAmount: amount,
-      accountBalance: `${amount.toLocaleString()} Diamond`,
-      accountLog: addForm.note || 'manual',
+      numberOfChanges: `${prefix}${amount.toLocaleString()} ${currency}`,
+      changeAmount: addForm.type === 'Add' ? amount : -amount,
+      accountBalance: `${amount.toLocaleString()} ${currency}`,
+      accountLog: addForm.accountLog || '-',
       ip: '-',
       operator: 'admin (1)',
       addTime: new Date().toISOString().slice(0, 19).replace('T', ' '),
@@ -227,15 +252,28 @@ export default function ManualRechargePage() {
       </Paper>
 
       <Dialog open={addOpen} onClose={handleAddClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Add Manual Recharge</DialogTitle>
+        <DialogTitle>Add</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <TextField label="User ID" type="number" value={addForm.userId} onChange={(e) => setAddForm((f) => ({ ...f, userId: e.target.value }))} placeholder="Please enter user ID" fullWidth required />
-          <TextField label="Amount (Diamond)" type="number" value={addForm.amount} onChange={(e) => setAddForm((f) => ({ ...f, amount: e.target.value }))} placeholder="Amount to add" fullWidth required />
-          <TextField label="Note" value={addForm.note} onChange={(e) => setAddForm((f) => ({ ...f, note: e.target.value }))} placeholder="Account log / note" fullWidth />
+          <TextField label="Number of Changes" type="number" value={addForm.numberOfChanges} onChange={(e) => setAddForm((f) => ({ ...f, numberOfChanges: e.target.value }))} placeholder="Amount" fullWidth required />
+          <Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>Virtual Currency</Typography>
+            <ToggleButtonGroup value={addForm.virtualCurrency} exclusive onChange={(_, v) => v != null && setAddForm((f) => ({ ...f, virtualCurrency: v }))} size="small">
+              <ToggleButton value="Coin">Coin</ToggleButton>
+              <ToggleButton value="Diamond">Diamond</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>Type</Typography>
+            <ToggleButtonGroup value={addForm.type} exclusive onChange={(_, v) => v != null && setAddForm((f) => ({ ...f, type: v }))} size="small">
+              <ToggleButton value="Add">Add</ToggleButton>
+              <ToggleButton value="Reduce">Reduce</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+          <TextField label="Account Log" value={addForm.accountLog} onChange={(e) => setAddForm((f) => ({ ...f, accountLog: e.target.value }))} placeholder="Account log" fullWidth />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAddClose}>Cancel</Button>
-          <Button variant="contained" onClick={handleAddSubmit}>Add</Button>
+          <Button variant="contained" onClick={handleAddSubmit}>Confirm</Button>
         </DialogActions>
       </Dialog>
     </Box>

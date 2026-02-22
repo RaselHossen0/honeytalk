@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   Box,
@@ -22,7 +22,7 @@ import { useTabsStore } from '@/store/tabs';
 import type { ReceiveValidationRecord } from '@/types/bonus-receive';
 import { fetchReceiveValidationList, updateReceiveValidationAction } from '@/services/bonus-receive';
 
-export default function ReceiveValidationPage() {
+function ReceiveValidationContent() {
   const searchParams = useSearchParams();
   const addTab = useTabsStore((s) => s.addTab);
   const [data, setData] = useState<ReceiveValidationRecord[]>([]);
@@ -257,5 +257,15 @@ export default function ReceiveValidationPage() {
         </Box>
       </TableContainer>
     </Box>
+  );
+}
+
+export default function ReceiveValidationPage() {
+  return (
+    <Suspense fallback={
+      <Box sx={{ p: 3, textAlign: 'center', color: 'text.secondary' }}>Loading...</Box>
+    }>
+      <ReceiveValidationContent />
+    </Suspense>
   );
 }
