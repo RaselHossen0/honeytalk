@@ -93,7 +93,7 @@ export default function HeadFrameListPage() {
     <Box>
       <Box sx={{ mb: 2 }}>
         <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-          + Add
+          Add
         </Button>
       </Box>
 

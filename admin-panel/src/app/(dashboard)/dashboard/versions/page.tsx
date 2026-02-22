@@ -21,9 +21,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  IconButton,
 } from '@mui/material';
-import { Add, Edit, Delete } from '@mui/icons-material';
+import { Add, Edit, Delete, Close } from '@mui/icons-material';
 import { OperationButton } from '@/components/common/OperationButton';
+import { ApkUpload } from '@/components/common/ApkUpload';
 import { useTabsStore } from '@/store/tabs';
 import type { AppVersion } from '@/types/version';
 import { demoAppVersions } from '@/lib/demo-data';
@@ -130,7 +132,7 @@ export default function VersionListPage() {
     <Box>
       <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
         <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-          + Add
+          Add
         </Button>
         <Box component="span" sx={{ color: 'text.secondary', fontSize: 14 }}>
           Download link (OSS service needs to configure its own domain name to use download)
@@ -194,12 +196,45 @@ export default function VersionListPage() {
         )}
       </TableContainer>
 
-      <Dialog open={editOpen} onClose={() => setEditOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editing ? 'Edit' : 'Add'} Version</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
-          <TextField label="Version Number" value={form.versionNumber} onChange={(e) => setForm((f) => ({ ...f, versionNumber: e.target.value }))} fullWidth required placeholder="e.g. 2025101201" />
-          <TextField label="Version content" value={form.versionContent} onChange={(e) => setForm((f) => ({ ...f, versionContent: e.target.value }))} fullWidth multiline rows={3} placeholder="Release notes" />
-          <TextField label="Download address" value={form.downloadAddress} onChange={(e) => setForm((f) => ({ ...f, downloadAddress: e.target.value }))} fullWidth required placeholder="https://..." />
+      <Dialog open={editOpen} onClose={() => setEditOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 2 } }}>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1 }}>
+          {editing ? 'Edit' : 'Add'}
+          <IconButton size="small" onClick={() => setEditOpen(false)} aria-label="Close">
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+          <TextField
+            label="Version Number"
+            value={form.versionNumber}
+            onChange={(e) => setForm((f) => ({ ...f, versionNumber: e.target.value }))}
+            fullWidth
+            required
+            placeholder="e.g. 2025101201"
+          />
+          <TextField
+            label="Version content"
+            value={form.versionContent}
+            onChange={(e) => setForm((f) => ({ ...f, versionContent: e.target.value }))}
+            fullWidth
+            multiline
+            rows={3}
+            placeholder="Please enter content"
+          />
+          <ApkUpload
+            value={form.downloadAddress}
+            onChange={(url) => setForm((f) => ({ ...f, downloadAddress: url }))}
+            label="Add file"
+            helperText="Uploading installation packages can only be in APK format!"
+          />
+          <TextField
+            label="Download address"
+            value={form.downloadAddress}
+            onChange={(e) => setForm((f) => ({ ...f, downloadAddress: e.target.value }))}
+            fullWidth
+            placeholder="https://..."
+            helperText="If upload fails, please use OSS tool to upload afterwards"
+          />
           <FormControl fullWidth>
             <InputLabel>Platform</InputLabel>
             <Select value={form.platform} label="Platform" onChange={(e) => setForm((f) => ({ ...f, platform: e.target.value as 'Android' | 'iOS' }))}>
@@ -215,17 +250,19 @@ export default function VersionListPage() {
             </Select>
           </FormControl>
           <FormControl fullWidth>
-            <InputLabel>Whether to publish</InputLabel>
-            <Select value={form.whetherToPublish} label="Whether to publish" onChange={(e) => setForm((f) => ({ ...f, whetherToPublish: e.target.value as 'Yes' | 'No' }))}>
+            <InputLabel>Publish</InputLabel>
+            <Select value={form.whetherToPublish} label="Publish" onChange={(e) => setForm((f) => ({ ...f, whetherToPublish: e.target.value as 'Yes' | 'No' }))}>
               <MenuItem value="Yes">Yes</MenuItem>
               <MenuItem value="No">No</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEditOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>
-            Save
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button variant="outlined" color="inherit" onClick={() => setEditOpen(false)}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleSave} disabled={!form.versionNumber.trim()}>
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>

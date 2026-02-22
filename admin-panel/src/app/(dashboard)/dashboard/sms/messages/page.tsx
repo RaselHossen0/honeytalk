@@ -15,6 +15,7 @@ import {
   Pagination,
   Typography,
   FormControl,
+  InputLabel,
   Select,
   MenuItem,
   Dialog,
@@ -46,7 +47,7 @@ export default function SystemMessageListPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState<SystemMessagePayload>({
     content: '',
-    sender: '',
+    sender: '0',
     sendingMethod: 'All anchors.',
   });
 
@@ -75,7 +76,7 @@ export default function SystemMessageListPage() {
   }, [load]);
 
   const handleAdd = () => {
-    setForm({ content: '', sender: '', sendingMethod: 'All anchors.' });
+    setForm({ content: '', sender: '0', sendingMethod: 'All anchors.' });
     setDialogOpen(true);
   };
 
@@ -117,7 +118,7 @@ export default function SystemMessageListPage() {
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-          + Add
+          Add
         </Button>
       </Box>
 
@@ -209,25 +210,17 @@ export default function SystemMessageListPage() {
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          Add System Message
+          Add
           <IconButton size="small" onClick={() => setDialogOpen(false)}>
             <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
-            <TextField fullWidth multiline rows={3} label="Content" value={form.content} onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))} placeholder="Enter message content" />
-            <TextField fullWidth label="Sender" value={form.sender} onChange={(e) => setForm((p) => ({ ...p, sender: e.target.value }))} placeholder="e.g. 166593" />
+            <TextField fullWidth required multiline rows={4} label="* Content" value={form.content} onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))} placeholder="Enter message content" />
             <FormControl fullWidth>
-              <Box component="label" sx={{ fontSize: 12, color: 'text.secondary', mb: 0.5, display: 'block' }}>
-                Sending Method
-              </Box>
-              <Select
-                value={form.sendingMethod}
-                onChange={(e) => setForm((p) => ({ ...p, sendingMethod: e.target.value }))}
-                size="small"
-                sx={{ mt: 0 }}
-              >
+              <InputLabel>Type</InputLabel>
+              <Select value={form.sendingMethod} label="Type" onChange={(e) => setForm((p) => ({ ...p, sendingMethod: e.target.value }))}>
                 <MenuItem value="All anchors.">All anchors.</MenuItem>
                 <MenuItem value="Group">Group</MenuItem>
                 <MenuItem value="Customized anchor">Customized anchor</MenuItem>

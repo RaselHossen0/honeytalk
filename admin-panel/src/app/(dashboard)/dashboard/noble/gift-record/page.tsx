@@ -118,7 +118,7 @@ export default function NobleGiftRecordPage() {
             sx={{ minWidth: 200 }}
           />
           <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>
-            Q Query
+            Query
           </Button>
           <Button variant="outlined" color="error" startIcon={<Clear />} onClick={handleClear}>
             Clear conditions

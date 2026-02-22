@@ -19,11 +19,15 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { OperationButton } from '@/components/common/OperationButton';
 import { useTabsStore } from '@/store/tabs';
-import type { GameRecordFilters } from '@/types/game';
+import type { GameRecordFilters, GameRecord } from '@/types/game';
 import { fetchGameRecords } from '@/services/game';
 
 const DATE_BUTTONS = [
@@ -77,6 +81,8 @@ export default function GameRecordsPage() {
     timeStart: '',
     timeEnd: '',
   });
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [viewing, setViewing] = useState<GameRecord | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -118,6 +124,10 @@ export default function GameRecordsPage() {
   };
 
   const totalPages = Math.ceil(total / perPage) || 1;
+  const handleViewDetails = (row: GameRecord) => {
+    setViewing(row);
+    setDetailsOpen(true);
+  };
 
   return (
     <Box>
@@ -151,7 +161,7 @@ export default function GameRecordsPage() {
           </Button>
         ))}
         <Button variant="contained" startIcon={<Search />} onClick={handleQuery} sx={{ ml: 1 }}>
-          Q Query
+          Query
         </Button>
         <Button variant="outlined" color="error" onClick={handleClear}>
           Clear conditions
@@ -205,7 +215,7 @@ export default function GameRecordsPage() {
                   <TableCell>{row.time}</TableCell>
                   <TableCell>
                     <OperationButton
-                      items={[{ label: 'View Details', onClick: () => {} }]}
+                      items={[{ label: 'View Details', onClick: () => handleViewDetails(row) }]}
                     />
                   </TableCell>
                 </TableRow>
@@ -229,6 +239,27 @@ export default function GameRecordsPage() {
           <Pagination count={totalPages} page={page + 1} onChange={(_, p) => setPage(p - 1)} color="primary" size="small" showFirstButton showLastButton />
         </Box>
       </TableContainer>
+
+      <Dialog open={detailsOpen} onClose={() => setDetailsOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Game Record Details</DialogTitle>
+        <DialogContent>
+          {viewing && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, pt: 1 }}>
+              <Box><strong>Number:</strong> {viewing.number}</Box>
+              <Box><strong>Game Name:</strong> {viewing.gameName}</Box>
+              <Box><strong>Identification:</strong> {viewing.identification}</Box>
+              <Box><strong>Consumption amount:</strong> {viewing.consumptionAmount.toLocaleString()}</Box>
+              <Box><strong>Reward Amount:</strong> {viewing.rewardAmount.toLocaleString()}</Box>
+              <Box><strong>Platform revenue:</strong> {viewing.platformRevenue.toLocaleString()}</Box>
+              <Box><strong>Game victory result:</strong> <Box component="pre" sx={{ m: 0, fontSize: 12, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{viewing.gameVictoryResult}</Box></Box>
+              <Box><strong>Time:</strong> {viewing.time}</Box>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDetailsOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

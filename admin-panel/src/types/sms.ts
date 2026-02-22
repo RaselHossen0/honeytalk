@@ -4,12 +4,22 @@ export interface SmsInterface {
   id: number;
   number: number;
   interfaceName: string;
+  categoryName: string;
+  smsInterface: string;
+  account: string;
+  smsInterfaceType: string;
+  password: string;
   description: string;
   status: 'Valid' | 'Invalid';
 }
 
 export interface SmsInterfacePayload {
   interfaceName: string;
+  categoryName: string;
+  smsInterface: string;
+  account: string;
+  smsInterfaceType: string;
+  password: string;
   description: string;
   status?: 'Valid' | 'Invalid';
 }
@@ -40,6 +50,7 @@ export interface BusinessQueueItem {
   content: string;
   verificationCode: string;
   creationTime: string;
+  time: string;
   status?: string;
   result?: string;
   logInformation?: string;

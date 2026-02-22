@@ -132,7 +132,7 @@ export default function NoblePrivilegesPage() {
     <Box>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'flex-end', mb: 2 }}>
         <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-          + Add
+          Add
         </Button>
         <FormControl size="small" sx={{ minWidth: 180 }}>
           <InputLabel>Noble classification</InputLabel>
@@ -168,7 +168,7 @@ export default function NoblePrivilegesPage() {
           </Select>
         </FormControl>
         <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>
-          Q Query
+          Query
         </Button>
         <Button variant="outlined" color="error" onClick={handleClear}>
           Clear conditions

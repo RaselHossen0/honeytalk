@@ -384,6 +384,8 @@ export const navConfig: NavItem[] = [
     icon: <LocalAtm />,
     children: [
       { label: 'Agent Account Management', path: '/dashboard/agent-recharge', icon: <ListAlt /> },
+      { label: 'Bonus Receive', path: '/dashboard/agent-recharge/bonus-receive', icon: <CardGiftcard /> },
+      { label: 'Receive Validation', path: '/dashboard/agent-recharge/receive-validation', icon: <HowToReg /> },
       { label: 'Recharge record', path: '/dashboard/agent-recharge/records', icon: <ListAlt /> },
       { label: 'Sales records', path: '/dashboard/agent-recharge/sales', icon: <ListAlt /> },
       { label: 'Invitation record', path: '/dashboard/agent-recharge/invitations', icon: <ListAlt /> },

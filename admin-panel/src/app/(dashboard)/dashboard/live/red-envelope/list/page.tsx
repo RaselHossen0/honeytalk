@@ -111,7 +111,7 @@ export default function RedEnvelopeListPage() {
           </FormControl>
           <TextField size="small" type="datetime-local" label="Creation time" value={filters.creationStart} onChange={(e) => setFilters((p) => ({ ...p, creationStart: e.target.value }))} InputLabelProps={{ shrink: true }} sx={{ minWidth: 180 }} />
           <TextField size="small" type="datetime-local" label="To" value={filters.creationEnd} onChange={(e) => setFilters((p) => ({ ...p, creationEnd: e.target.value }))} InputLabelProps={{ shrink: true }} sx={{ minWidth: 180 }} />
-          <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Q Query</Button>
+          <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Query</Button>
           <Button variant="outlined" color="error" startIcon={<Clear />} onClick={handleClear}>Clear conditions</Button>
         </Box>
       </Paper>

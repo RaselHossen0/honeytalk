@@ -18,6 +18,10 @@ import {
   DialogActions,
   TextField,
   IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { Add, Edit, Delete, Close } from '@mui/icons-material';
 import { OperationButton } from '@/components/common/OperationButton';
@@ -40,9 +44,21 @@ export default function SMSInterfaceListPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<SmsInterfacePayload>({
     interfaceName: '',
+    categoryName: '',
+    smsInterface: '',
+    account: '',
+    smsInterfaceType: '',
+    password: '',
     description: '',
     status: 'Valid',
   });
+
+  const SMS_INTERFACE_OPTIONS = [
+    { value: 'aliyun', label: 'Aliyun' },
+    { value: 'vonage', label: 'Vonage' },
+    { value: 'engage', label: 'Engage' },
+    { value: 'engage_otp', label: 'Engage OTP' },
+  ];
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -69,7 +85,7 @@ export default function SMSInterfaceListPage() {
 
   const handleAdd = () => {
     setEditingId(null);
-    setForm({ interfaceName: '', description: '', status: 'Valid' });
+    setForm({ interfaceName: '', categoryName: '', smsInterface: '', account: '', smsInterfaceType: 'aliyun', password: '', description: '', status: 'Valid' });
     setDialogOpen(true);
   };
 
@@ -77,6 +93,11 @@ export default function SMSInterfaceListPage() {
     setEditingId(row.id);
     setForm({
       interfaceName: row.interfaceName,
+      categoryName: row.categoryName,
+      smsInterface: row.smsInterface,
+      account: row.account,
+      smsInterfaceType: row.smsInterfaceType,
+      password: row.password,
       description: row.description,
       status: row.status,
     });
@@ -122,7 +143,7 @@ export default function SMSInterfaceListPage() {
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-          + Add
+          Add
         </Button>
       </Box>
 
@@ -135,7 +156,9 @@ export default function SMSInterfaceListPage() {
               </TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Number</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Interface Name</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>Category name</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>SMS interface</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>account</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Operation</TableCell>
             </TableRow>
@@ -143,7 +166,7 @@ export default function SMSInterfaceListPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={8} align="center" sx={{ py: 4 }}>
                   Loading...
                 </TableCell>
               </TableRow>
@@ -155,7 +178,9 @@ export default function SMSInterfaceListPage() {
                   </TableCell>
                   <TableCell>{row.number}</TableCell>
                   <TableCell>{row.interfaceName}</TableCell>
-                  <TableCell sx={{ maxWidth: 200 }}>{row.description || '-'}</TableCell>
+                  <TableCell>{row.categoryName || '-'}</TableCell>
+                  <TableCell>{row.smsInterface || '-'}</TableCell>
+                  <TableCell>{row.account || '-'}</TableCell>
                   <TableCell>
                     <Box
                       component="span"
@@ -190,30 +215,41 @@ export default function SMSInterfaceListPage() {
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {editingId ? 'Edit SMS Interface' : 'Add SMS Interface'}
+          {editingId ? 'Edit' : 'Create'}
           <IconButton size="small" onClick={() => setDialogOpen(false)}>
             <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
-            <TextField fullWidth label="Interface Name" value={form.interfaceName} onChange={(e) => setForm((p) => ({ ...p, interfaceName: e.target.value }))} placeholder="e.g. AliCloud SMS" />
-            <TextField fullWidth label="Description" value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} placeholder="e.g. https://..." />
+            <TextField fullWidth required label="* Interface Name" value={form.interfaceName} onChange={(e) => setForm((p) => ({ ...p, interfaceName: e.target.value }))} placeholder="e.g. AliCloud SMS" />
+            <TextField fullWidth label="Category name" value={form.categoryName} onChange={(e) => setForm((p) => ({ ...p, categoryName: e.target.value }))} placeholder="e.g. ALI" />
+            <TextField fullWidth label="SMS interface" value={form.smsInterface} onChange={(e) => setForm((p) => ({ ...p, smsInterface: e.target.value }))} placeholder="e.g. 123" />
+            <TextField fullWidth label="account" value={form.account} onChange={(e) => setForm((p) => ({ ...p, account: e.target.value }))} placeholder="Account" />
+            <FormControl fullWidth required>
+              <InputLabel>* SMS interface</InputLabel>
+              <Select value={form.smsInterfaceType} label="* SMS interface" onChange={(e) => setForm((p) => ({ ...p, smsInterfaceType: e.target.value }))}>
+                {SMS_INTERFACE_OPTIONS.map((o) => (
+                  <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField fullWidth type="password" label="password" value={form.password} onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))} placeholder="Password" />
+            <TextField fullWidth multiline rows={2} label="Description" value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} placeholder="For example: I am a description" />
             {editingId && (
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button size="small" variant={form.status === 'Valid' ? 'contained' : 'outlined'} onClick={() => setForm((p) => ({ ...p, status: 'Valid' }))}>
-                  Valid
-                </Button>
-                <Button size="small" variant={form.status === 'Invalid' ? 'contained' : 'outlined'} color="error" onClick={() => setForm((p) => ({ ...p, status: 'Invalid' }))}>
-                  Invalid
-                </Button>
-              </Box>
+              <FormControl fullWidth>
+                <InputLabel>Whether to enable</InputLabel>
+                <Select value={form.status} label="Whether to enable" onChange={(e) => setForm((p) => ({ ...p, status: e.target.value as 'Valid' | 'Invalid' }))}>
+                  <MenuItem value="Valid">Valid</MenuItem>
+                  <MenuItem value="Invalid">Invalid</MenuItem>
+                </Select>
+              </FormControl>
             )}
           </Box>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleDialogConfirm} disabled={!form.interfaceName.trim()}>
+          <Button variant="contained" onClick={handleDialogConfirm} disabled={!form.interfaceName.trim() || !form.smsInterfaceType}>
             Confirm
           </Button>
         </DialogActions>

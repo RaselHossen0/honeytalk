@@ -199,7 +199,7 @@ export default function PopularCountriesPage() {
                 Flag images (upload one per country)
               </Box>
               <Button size="small" onClick={addImageUrl}>
-                + Add image
+                Add image
               </Button>
             </Box>
             {form.imageUrls.map((url, i) => (

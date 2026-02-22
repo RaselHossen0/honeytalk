@@ -164,7 +164,7 @@ export default function DynamicListPage() {
             </Select>
           </FormControl>
           <Button variant="contained" startIcon={<Search />} onClick={() => setPage(0)}>
-            Q Query
+            Query
           </Button>
           <Button
             variant="outlined"

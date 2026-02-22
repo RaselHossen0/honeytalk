@@ -105,7 +105,7 @@ export default function PaymentInterfacePage() {
     <Box>
       <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
         <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-          + Add
+          Add
         </Button>
         {selected.length > 0 && (
           <Button variant="outlined" color="error" startIcon={<Delete />} onClick={handleBulkDelete}>

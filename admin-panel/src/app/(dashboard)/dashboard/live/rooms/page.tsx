@@ -152,7 +152,7 @@ export default function LiveRoomListPage() {
           </FormControl>
           <TextField size="small" type="date" label="Creation time" InputLabelProps={{ shrink: true }} value={filters.creationTimeStart} onChange={(e) => setFilters((p) => ({ ...p, creationTimeStart: e.target.value }))} sx={{ minWidth: 160 }} />
           <TextField size="small" type="date" label="to" InputLabelProps={{ shrink: true }} value={filters.creationTimeEnd} onChange={(e) => setFilters((p) => ({ ...p, creationTimeEnd: e.target.value }))} sx={{ minWidth: 160 }} />
-          <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Q Query</Button>
+          <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Query</Button>
           <Button variant="outlined" color="error" startIcon={<Clear />} onClick={handleClear}>Clear conditions</Button>
         </Box>
       </Paper>
@@ -268,7 +268,7 @@ export default function LiveRoomListPage() {
             <FormControl size="small" sx={{ minWidth: 120 }}><InputLabel>Gift name</InputLabel><Select label="Gift name"><MenuItem value="all">All</MenuItem></Select></FormControl>
             <FormControl size="small" sx={{ minWidth: 100 }}><InputLabel>Gifted time</InputLabel><Select label="Year"><MenuItem value="2026">2026</MenuItem></Select></FormControl>
             <FormControl size="small" sx={{ minWidth: 100 }}><InputLabel>Month</InputLabel><Select label="Month"><MenuItem value="02">02</MenuItem></Select></FormControl>
-            <Button variant="contained" size="small">Q Query</Button>
+            <Button variant="contained" size="small">Query</Button>
             <Button variant="outlined" color="error" size="small">Clear conditions</Button>
           </Box>
           <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 1 }}>
