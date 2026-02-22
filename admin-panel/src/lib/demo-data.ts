@@ -564,9 +564,9 @@ export const demoNobleGiftRecords: NobleGiftRecord[] = [
 ];
 
 export const demoPaymentInterfaces: PaymentInterface[] = [
-  { id: 1, number: 48, name: 'Google Pay', status: 'Valid', receivedPayment: 0, automaticWithdrawal: 'No', sort: 1 },
-  { id: 2, number: 49, name: 'TopPay', status: 'Invalid', receivedPayment: 0, automaticWithdrawal: 'Yes', sort: 1 },
-  { id: 3, number: 44, name: 'Apple Pay', status: 'Valid', receivedPayment: 96, automaticWithdrawal: 'No', sort: 0 },
+  { id: 1, number: 48, name: 'Google Pay', categoryName: 'GooglePay', status: 'Valid', receivedPayment: 0, automaticWithdrawal: 'No', withdrawalPaymentAccount: '', paymentType: 'Online Payment', imageUrl: 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg', description: 'Google Pay', sort: 1 },
+  { id: 2, number: 49, name: 'TopPay', categoryName: 'TopPay', status: 'Invalid', receivedPayment: 0, automaticWithdrawal: 'Yes', withdrawalPaymentAccount: '', paymentType: 'Offline payment', imageUrl: '', description: '', sort: 1 },
+  { id: 3, number: 44, name: 'Apple Pay', categoryName: 'ApplePay', status: 'Valid', receivedPayment: 96, automaticWithdrawal: 'No', withdrawalPaymentAccount: '', paymentType: 'App payment', imageUrl: '', description: 'Apple Pay', sort: 0 },
 ];
 
 export const demoRechargeRecords: RechargeRecord[] = [

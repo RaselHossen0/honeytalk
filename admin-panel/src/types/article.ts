@@ -6,6 +6,7 @@ export interface Article {
   articleTitle: string;
   category: string;
   status: 'Valid' | 'Invalid';
+  content: string;
   creationTime: string;
   updateTime: string;
   sort: number;
@@ -15,6 +16,7 @@ export interface Article {
 export interface ArticlePayload {
   articleTitle: string;
   category: string;
+  content?: string;
   status?: 'Valid' | 'Invalid';
   sort?: number;
 }

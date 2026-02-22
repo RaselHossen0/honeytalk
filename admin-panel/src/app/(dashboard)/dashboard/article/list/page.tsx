@@ -15,6 +15,7 @@ import {
   Pagination,
   Typography,
   FormControl,
+  InputLabel,
   Select,
   MenuItem,
   TextField,
@@ -25,7 +26,7 @@ import {
   IconButton,
 } from '@mui/material';
 import { Add, Edit, Delete, Visibility, Close } from '@mui/icons-material';
-import { OperationButton } from '@/components/common/OperationButton';
+import { RichTextEditor } from '@/components/common/RichTextEditor';
 import { useTabsStore } from '@/store/tabs';
 import type { Article, ArticlePayload } from '@/types/article';
 import {
@@ -50,7 +51,7 @@ export default function ArticleManagementListPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [form, setForm] = useState<ArticlePayload>({ articleTitle: '', category: '', status: 'Valid', sort: 0 });
+  const [form, setForm] = useState<ArticlePayload>({ articleTitle: '', category: '', content: '', status: 'Valid', sort: 0 });
   const [previewArticle, setPreviewArticle] = useState<Article | null>(null);
 
   const load = useCallback(async () => {
@@ -99,7 +100,7 @@ export default function ArticleManagementListPage() {
   const handleAdd = () => {
     setEditingId(null);
     const defaultCat = categories.find((c) => c !== 'All') ?? '';
-    setForm({ articleTitle: '', category: defaultCat, status: 'Valid', sort: 0 });
+    setForm({ articleTitle: '', category: defaultCat, content: '', status: 'Valid', sort: 0 });
     setDialogOpen(true);
   };
 
@@ -108,6 +109,7 @@ export default function ArticleManagementListPage() {
     setForm({
       articleTitle: row.articleTitle,
       category: row.category,
+      content: row.content ?? '',
       status: row.status,
       sort: row.sort,
     });
@@ -259,14 +261,18 @@ export default function ArticleManagementListPage() {
                   <TableCell>{row.updateTime}</TableCell>
                   <TableCell>{row.sort}</TableCell>
                   <TableCell>{row.clickCount}</TableCell>
-                  <TableCell sx={{ width: 56 }}>
-                    <OperationButton
-                      items={[
-                        { label: 'Edit', onClick: () => handleEdit(row), icon: <Edit fontSize="small" /> },
-                        { label: 'Preview', onClick: () => handlePreview(row), icon: <Visibility fontSize="small" /> },
-                      ]}
-                      dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
-                    />
+                  <TableCell>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                      <Button size="small" variant="contained" color="primary" startIcon={<Edit fontSize="small" />} onClick={() => handleEdit(row)}>
+                        Edit
+                      </Button>
+                      <Button size="small" variant="contained" color="success" startIcon={<Visibility fontSize="small" />} onClick={() => handlePreview(row)}>
+                        Preview
+                      </Button>
+                      <Button size="small" variant="outlined" color="error" startIcon={<Delete fontSize="small" />} onClick={() => handleDelete(row)}>
+                        Delete
+                      </Button>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))
@@ -313,9 +319,9 @@ export default function ArticleManagementListPage() {
         </Box>
       </TableContainer>
 
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {editingId ? 'Edit Article' : 'Add Article'}
+          {editingId ? 'Edit' : 'Add'}
           <IconButton size="small" onClick={() => setDialogOpen(false)}>
             <Close />
           </IconButton>
@@ -324,20 +330,15 @@ export default function ArticleManagementListPage() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
             <TextField
               fullWidth
-              label="Article title"
+              required
+              label="* Article title"
               value={form.articleTitle}
               onChange={(e) => setForm((p) => ({ ...p, articleTitle: e.target.value }))}
             />
+            <TextField fullWidth type="number" label="Sort" value={form.sort ?? 0} onChange={(e) => setForm((p) => ({ ...p, sort: parseInt(e.target.value, 10) || 0 }))} />
             <FormControl fullWidth>
-              <Box component="label" sx={{ fontSize: 12, color: 'text.secondary', mb: 0.5, display: 'block' }}>
-                Category
-              </Box>
-              <Select
-                value={form.category}
-                onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}
-                size="small"
-                sx={{ mt: 0 }}
-              >
+              <InputLabel>Category</InputLabel>
+              <Select value={form.category} label="Category" onChange={(e) => setForm((p) => ({ ...p, category: e.target.value }))}>
                 {categories.filter((c) => c !== 'All').map((c) => (
                   <MenuItem key={c} value={c}>
                     {c}
@@ -345,9 +346,11 @@ export default function ArticleManagementListPage() {
                 ))}
               </Select>
             </FormControl>
-            <TextField fullWidth type="number" label="Sort" value={form.sort ?? 0} onChange={(e) => setForm((p) => ({ ...p, sort: parseInt(e.target.value, 10) || 0 }))} />
-            {editingId && (
-              <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                Status
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
                 <Button size="small" variant={form.status === 'Valid' ? 'contained' : 'outlined'} onClick={() => setForm((p) => ({ ...p, status: 'Valid' }))}>
                   Valid
                 </Button>
@@ -355,7 +358,13 @@ export default function ArticleManagementListPage() {
                   Invalid
                 </Button>
               </Box>
-            )}
+            </Box>
+            <RichTextEditor
+              label={`${form.category || 'Article'} Description`}
+              value={form.content ?? ''}
+              onChange={(content) => setForm((p) => ({ ...p, content }))}
+              minHeight={320}
+            />
           </Box>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
@@ -368,7 +377,7 @@ export default function ArticleManagementListPage() {
 
       <Dialog open={previewOpen} onClose={() => setPreviewOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          Preview: {previewArticle?.articleTitle}
+          Preview
           <IconButton size="small" onClick={() => setPreviewOpen(false)}>
             <Close />
           </IconButton>
@@ -376,15 +385,42 @@ export default function ArticleManagementListPage() {
         <DialogContent>
           {previewArticle && (
             <Box sx={{ pt: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Category: {previewArticle.category} | Status: {previewArticle.status}
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                {previewArticle.articleTitle}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 2 }}>
-                Created: {previewArticle.creationTime} | Updated: {previewArticle.updateTime}
+              <Typography variant="body2" fontWeight={500} sx={{ mb: 0.5 }}>
+                {previewArticle.category} Description
+              </Typography>
+              {previewArticle.content ? (
+                <Box sx={{ mb: 2, '& img': { maxWidth: '100%' }, fontSize: 14 }} dangerouslySetInnerHTML={{ __html: previewArticle.content }} />
+              ) : (
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  (No content)
+                </Typography>
+              )}
+              <Typography component="span" variant="body2" sx={{ color: 'error.main', fontWeight: 500 }}>
+                Access link address:
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 0.5, wordBreak: 'break-all' }}>
+                {(process.env.NEXT_PUBLIC_ARTICLE_BASE_URL || 'https://mapi.bogolive.net')}/wap/index.php?ctl=settings&act=article_show&article_id={previewArticle.number}
               </Typography>
             </Box>
           )}
         </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (!previewArticle) return;
+              const base = process.env.NEXT_PUBLIC_ARTICLE_BASE_URL || 'https://mapi.bogolive.net';
+              const url = `${base}/wap/index.php?ctl=settings&act=article_show&article_id=${previewArticle.number}`;
+              navigator.clipboard.writeText(url);
+            }}
+          >
+            Copy link
+          </Button>
+          <Button onClick={() => setPreviewOpen(false)}>Cancel</Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );
