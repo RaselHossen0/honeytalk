@@ -119,6 +119,7 @@ export default function LiveRoomListPage() {
     left: 0,
     zIndex: 3,
     minWidth: 90,
+    width: 90,
     bgcolor: 'grey.50',
     boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
   };
@@ -127,9 +128,12 @@ export default function LiveRoomListPage() {
     right: 0,
     zIndex: 3,
     minWidth: 100,
+    width: 100,
     bgcolor: 'grey.50',
     boxShadow: '-2px 0 4px -2px rgba(0,0,0,0.08)',
   };
+  const stickyFirstBody = (bg: string) => ({ ...stickyFirst, zIndex: 2, bgcolor: bg });
+  const stickyLastBody = (bg: string) => ({ ...stickyLast, zIndex: 2, bgcolor: bg });
 
   return (
     <Box>
@@ -153,77 +157,71 @@ export default function LiveRoomListPage() {
         </Box>
       </Paper>
 
-      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2, overflowX: 'auto' }}>
-        <Table size="small" stickyHeader sx={{ minWidth: 1400 }}>
-          <TableHead>
-            <TableRow sx={{ bgcolor: 'grey.50' }}>
-              <TableCell sx={{ ...stickyFirst, fontWeight: 600 }}>Room number</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 70 }} align="right">Coin</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 110 }} align="center">Number of Participants</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Total number of people</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 110 }} align="center">Robots/People</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>Type</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Is it charged?</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Type of charge</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Recommended</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 90 }} align="right">Reports</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 165 }}>Creation time</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 140 }}>Heartbeat Time</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 70 }} align="right">Popular</TableCell>
-              <TableCell sx={{ ...stickyLast, fontWeight: 600 }}>Operation</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((row, index) => (
-              <TableRow
-                key={row.id}
-                hover
-                sx={{
-                  '&:nth-of-type(even)': { bgcolor: 'grey.50' },
-                  '&:hover td:first-of-type': { bgcolor: 'action.hover' },
-                  '&:hover td:last-of-type': { bgcolor: 'action.hover' },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    ...stickyFirst,
-                    zIndex: 2,
-                    bgcolor: index % 2 === 1 ? 'grey.50' : 'background.paper',
-                  }}
-                >
-                  {row.roomNumber}
-                </TableCell>
-                <TableCell align="right">{row.coin}</TableCell>
-                <TableCell align="center">{row.participantsActual}/{row.participantsTotal}</TableCell>
-                <TableCell>{row.totalPeople}</TableCell>
-                <TableCell align="center">{row.robotsCurrent}/{row.robotsTotal}</TableCell>
-                <TableCell>{row.status}</TableCell>
-                <TableCell>{row.type}</TableCell>
-                <TableCell>{row.isCharged}</TableCell>
-                <TableCell>{row.chargeType}</TableCell>
-                <TableCell>{row.recommended}</TableCell>
-                <TableCell align="right">{row.reportCount}</TableCell>
-                <TableCell>{row.creationTime}</TableCell>
-                <TableCell>{row.heartbeatTime}</TableCell>
-                <TableCell align="right">{row.popular}</TableCell>
-                <TableCell
-                  sx={{
-                    ...stickyLast,
-                    zIndex: 2,
-                    bgcolor: index % 2 === 1 ? 'grey.50' : 'background.paper',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  <Button size="small" variant="outlined" endIcon={<KeyboardArrowDown />} onClick={(e) => handleOpMenu(e, row)}>
-                    Operation
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Paper variant="outlined" sx={{ borderRadius: 2, overflow: 'hidden' }}>
+        <TableContainer sx={{ overflowX: 'auto', overflowY: 'visible', width: '100%' }}>
+          <Table size="small" stickyHeader sx={{ minWidth: 1400 }}>
+              <TableHead>
+                <TableRow sx={{ bgcolor: 'grey.50' }}>
+                  <TableCell sx={{ ...stickyFirst, fontWeight: 600 }}>Room number</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 70 }} align="right">Coin</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 110 }} align="center">Number of Participants</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Total number of people</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 110 }} align="center">Robots/People</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Status</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>Type</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Is it charged?</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Type of charge</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Recommended</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 90 }} align="right">Reports</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 165 }}>Creation time</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 140 }}>Heartbeat Time</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 70 }} align="right">Popular</TableCell>
+                  <TableCell sx={{ ...stickyLast, fontWeight: 600 }}>Operation</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.map((row, index) => (
+                  <TableRow
+                    key={row.id}
+                    hover
+                    sx={{
+                      '&:nth-of-type(even)': { bgcolor: 'grey.50' },
+                      '&:hover td:first-of-type': { bgcolor: 'action.hover' },
+                      '&:hover td:last-of-type': { bgcolor: 'action.hover' },
+                    }}
+                  >
+                    <TableCell sx={stickyFirstBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                      {row.roomNumber}
+                    </TableCell>
+                    <TableCell align="right">{row.coin}</TableCell>
+                    <TableCell align="center">{row.participantsActual}/{row.participantsTotal}</TableCell>
+                    <TableCell>{row.totalPeople}</TableCell>
+                    <TableCell align="center">{row.robotsCurrent}/{row.robotsTotal}</TableCell>
+                    <TableCell>{row.status}</TableCell>
+                    <TableCell>{row.type}</TableCell>
+                    <TableCell>{row.isCharged}</TableCell>
+                    <TableCell>{row.chargeType}</TableCell>
+                    <TableCell>{row.recommended}</TableCell>
+                    <TableCell align="right">{row.reportCount}</TableCell>
+                    <TableCell>{row.creationTime}</TableCell>
+                    <TableCell>{row.heartbeatTime}</TableCell>
+                    <TableCell align="right">{row.popular}</TableCell>
+                    <TableCell
+                      sx={{
+                        ...stickyLastBody(index % 2 === 1 ? 'grey.50' : 'background.paper'),
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      <Button size="small" variant="outlined" endIcon={<KeyboardArrowDown />} onClick={(e) => handleOpMenu(e, row)}>
+                        Operation
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
 
       <Menu anchorEl={anchorEl?.el} open={Boolean(anchorEl)} onClose={handleOpClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
         {OP_MENU_ITEMS.map((item) => (

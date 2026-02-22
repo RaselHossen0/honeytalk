@@ -131,6 +131,37 @@ export default function ReplaysPage() {
 
   const totalPages = Math.ceil(total / perPage) || 1;
 
+  const stickyFirst = {
+    position: 'sticky' as const,
+    left: 0,
+    zIndex: 3,
+    minWidth: 48,
+    width: 48,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyRoom = {
+    position: 'sticky' as const,
+    left: 48,
+    zIndex: 3,
+    minWidth: 100,
+    width: 100,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyLast = {
+    position: 'sticky' as const,
+    right: 0,
+    zIndex: 3,
+    minWidth: 100,
+    width: 100,
+    bgcolor: 'grey.50',
+    boxShadow: '-2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyFirstBody = (bg: string) => ({ ...stickyFirst, zIndex: 2, bgcolor: bg });
+  const stickyRoomBody = (bg: string) => ({ ...stickyRoom, zIndex: 2, bgcolor: bg });
+  const stickyLastBody = (bg: string) => ({ ...stickyLast, zIndex: 2, bgcolor: bg });
+
   return (
     <Box>
       <Box sx={{ mb: 2 }}>
@@ -227,80 +258,89 @@ export default function ReplaysPage() {
         </Button>
       </Box>
 
-      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2, overflowX: 'auto' }}>
-        <Table size="small">
-          <TableHead>
-            <TableRow sx={{ bgcolor: 'grey.50' }}>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  indeterminate={selected.length > 0 && selected.length < data.length}
-                  checked={data.length > 0 && selected.length === data.length}
-                  onChange={handleSelectAll}
-                />
-              </TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Room number</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Anchor ID</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Anchor Nickname</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Live Stream Title</TableCell>
-              <TableCell sx={{ fontWeight: 600 }} align="right">Actual number of viewers</TableCell>
-              <TableCell sx={{ fontWeight: 600 }} align="right">Total number of people</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Is it charged?</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Type of charge</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Log in</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Creation time</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>End Time</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Operation</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={14} align="center" sx={{ py: 4 }}>
-                  Loading...
+      <Paper variant="outlined" sx={{ borderRadius: 2, overflow: 'hidden' }}>
+        <TableContainer sx={{ overflowX: 'auto', overflowY: 'visible', width: '100%' }}>
+          <Table size="small" sx={{ minWidth: 1500 }}>
+            <TableHead>
+              <TableRow sx={{ bgcolor: 'grey.50' }}>
+                <TableCell padding="checkbox" sx={{ ...stickyFirst, fontWeight: 600 }}>
+                  <Checkbox
+                    indeterminate={selected.length > 0 && selected.length < data.length}
+                    checked={data.length > 0 && selected.length === data.length}
+                    onChange={handleSelectAll}
+                  />
                 </TableCell>
+                <TableCell sx={{ ...stickyRoom, fontWeight: 600 }}>Room number</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Anchor ID</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>Anchor Nickname</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 160 }}>Live Stream Title</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 120 }} align="right">Actual number of viewers</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 120 }} align="right">Total number of people</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>Type</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Is it charged?</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Type of charge</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 80 }}>Log in</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 150 }}>Creation time</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 150 }}>End Time</TableCell>
+                <TableCell sx={{ ...stickyLast, fontWeight: 600 }}>Operation</TableCell>
               </TableRow>
-            ) : (
-              data.map((row) => (
-                <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selected.includes(row.id)}
-                      onChange={() => handleSelectOne(row.id)}
-                    />
-                  </TableCell>
-                  <TableCell>{row.roomNumber}</TableCell>
-                  <TableCell>{row.anchorId}</TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box sx={{ width: 24, height: 24, borderRadius: '50%', bgcolor: 'grey.200' }} />
-                      {row.anchorNickname}
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ maxWidth: 180 }}>{row.liveStreamTitle}</TableCell>
-                  <TableCell align="right">{row.actualNumberOfViewers}</TableCell>
-                  <TableCell align="right">{row.totalNumberOfPeople}</TableCell>
-                  <TableCell>{row.type}</TableCell>
-                  <TableCell>{row.isCharged}</TableCell>
-                  <TableCell>{row.typeOfCharge || '-'}</TableCell>
-                  <TableCell>{row.login}</TableCell>
-                  <TableCell>{row.creationTime}</TableCell>
-                  <TableCell>{row.endTime || '-'}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      endIcon={<KeyboardArrowDown />}
-                      onClick={(e) => handleOpMenu(e, row)}
-                    >
-                      Operation
-                    </Button>
+            </TableHead>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={14} align="center" sx={{ py: 4 }}>
+                    Loading...
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                data.map((row, index) => (
+                  <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
+                    <TableCell padding="checkbox" sx={stickyFirstBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                      <Checkbox
+                        checked={selected.includes(row.id)}
+                        onChange={() => handleSelectOne(row.id)}
+                      />
+                    </TableCell>
+                    <TableCell sx={stickyRoomBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                      {row.roomNumber}
+                    </TableCell>
+                    <TableCell>{row.anchorId}</TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ width: 24, height: 24, borderRadius: '50%', bgcolor: 'grey.200' }} />
+                        {row.anchorNickname}
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ maxWidth: 180 }}>{row.liveStreamTitle}</TableCell>
+                    <TableCell align="right">{row.actualNumberOfViewers}</TableCell>
+                    <TableCell align="right">{row.totalNumberOfPeople}</TableCell>
+                    <TableCell>{row.type}</TableCell>
+                    <TableCell>{row.isCharged}</TableCell>
+                    <TableCell>{row.typeOfCharge || '-'}</TableCell>
+                    <TableCell>{row.login}</TableCell>
+                    <TableCell>{row.creationTime}</TableCell>
+                    <TableCell>{row.endTime || '-'}</TableCell>
+                    <TableCell
+                      sx={{
+                        ...stickyLastBody(index % 2 === 1 ? 'grey.50' : 'background.paper'),
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        endIcon={<KeyboardArrowDown />}
+                        onClick={(e) => handleOpMenu(e, row)}
+                      >
+                        Operation
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
         <Box
           sx={{
@@ -369,7 +409,7 @@ export default function ReplaysPage() {
             </Button>
           </Box>
         </Box>
-      </TableContainer>
+      </Paper>
 
       <Menu
         anchorEl={anchorEl?.el}

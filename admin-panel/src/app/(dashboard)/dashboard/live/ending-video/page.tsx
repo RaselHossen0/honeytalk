@@ -130,6 +130,27 @@ export default function EndingVideoPage() {
 
   const totalPages = Math.ceil(total / perPage) || 1;
 
+  const stickyFirst = {
+    position: 'sticky' as const,
+    left: 0,
+    zIndex: 3,
+    minWidth: 100,
+    width: 100,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyLast = {
+    position: 'sticky' as const,
+    right: 0,
+    zIndex: 3,
+    minWidth: 100,
+    width: 100,
+    bgcolor: 'grey.50',
+    boxShadow: '-2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyFirstBody = (bg: string) => ({ ...stickyFirst, zIndex: 2, bgcolor: bg });
+  const stickyLastBody = (bg: string) => ({ ...stickyLast, zIndex: 2, bgcolor: bg });
+
   return (
     <Box>
       <Grid container spacing={2} sx={{ mb: 2 }}>
@@ -219,78 +240,87 @@ export default function EndingVideoPage() {
         </Button>
       </Box>
 
-      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2, overflowX: 'auto' }}>
-        <Table size="small">
-          <TableHead>
-            <TableRow sx={{ bgcolor: 'grey.50' }}>
-              <TableCell sx={{ fontWeight: 600 }}>Room number</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Anchor ID</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Anchor Nickname</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Live Stream Title</TableCell>
-              <TableCell sx={{ fontWeight: 600 }} align="right">Total number of people</TableCell>
-              <TableCell sx={{ fontWeight: 600 }} align="right">Coin</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Is it charged?</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Type of charge</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Creation time</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>End Time</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Live streaming duration</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Operation</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={15} align="center" sx={{ py: 4 }}>
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : (
-              data.map((row) => (
-                <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
-                  <TableCell>{row.roomNumber}</TableCell>
-                  <TableCell>{row.anchorId}</TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box
-                        sx={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: '50%',
-                          bgcolor: 'grey.200',
-                        }}
-                      />
-                      {row.anchorNickname}
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ maxWidth: 180 }}>{row.liveStreamTitle}</TableCell>
-                  <TableCell align="right">{row.totalNumberOfPeople}</TableCell>
-                  <TableCell align="right">{row.coin.toLocaleString()}</TableCell>
-                  <TableCell>{row.status}</TableCell>
-                  <TableCell>{row.type}</TableCell>
-                  <TableCell>{row.category}</TableCell>
-                  <TableCell>{row.isCharged}</TableCell>
-                  <TableCell>{row.typeOfCharge || '-'}</TableCell>
-                  <TableCell>{row.creationTime}</TableCell>
-                  <TableCell>{row.endTime}</TableCell>
-                  <TableCell>{row.liveStreamingDuration}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      endIcon={<KeyboardArrowDown />}
-                      onClick={(e) => handleOpMenu(e, row)}
-                    >
-                      Operation
-                    </Button>
-                  </TableCell>
+      <Paper variant="outlined" sx={{ borderRadius: 2, overflow: 'hidden' }}>
+        <TableContainer sx={{ overflowX: 'auto', overflowY: 'visible', width: '100%' }}>
+          <Table size="small" sx={{ minWidth: 1600 }}>
+              <TableHead>
+                <TableRow sx={{ bgcolor: 'grey.50' }}>
+                  <TableCell sx={{ ...stickyFirst, fontWeight: 600 }}>Room number</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Anchor ID</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>Anchor Nickname</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 160 }}>Live Stream Title</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 120 }} align="right">Total number of people</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 80 }} align="right">Coin</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>Status</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 140 }}>Type</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Category</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Is it charged?</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Type of charge</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 150 }}>Creation time</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 150 }}>End Time</TableCell>
+                  <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>Live streaming duration</TableCell>
+                  <TableCell sx={{ ...stickyLast, fontWeight: 600 }}>Operation</TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              </TableHead>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={15} align="center" sx={{ py: 4 }}>
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  data.map((row, index) => (
+                    <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
+                      <TableCell sx={stickyFirstBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                        {row.roomNumber}
+                      </TableCell>
+                      <TableCell>{row.anchorId}</TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box
+                            sx={{
+                              width: 24,
+                              height: 24,
+                              borderRadius: '50%',
+                              bgcolor: 'grey.200',
+                            }}
+                          />
+                          {row.anchorNickname}
+                        </Box>
+                      </TableCell>
+                      <TableCell sx={{ maxWidth: 180 }}>{row.liveStreamTitle}</TableCell>
+                      <TableCell align="right">{row.totalNumberOfPeople}</TableCell>
+                      <TableCell align="right">{row.coin.toLocaleString()}</TableCell>
+                      <TableCell>{row.status}</TableCell>
+                      <TableCell>{row.type}</TableCell>
+                      <TableCell>{row.category}</TableCell>
+                      <TableCell>{row.isCharged}</TableCell>
+                      <TableCell>{row.typeOfCharge || '-'}</TableCell>
+                      <TableCell>{row.creationTime}</TableCell>
+                      <TableCell>{row.endTime}</TableCell>
+                      <TableCell>{row.liveStreamingDuration}</TableCell>
+                      <TableCell
+                        sx={{
+                          ...stickyLastBody(index % 2 === 1 ? 'grey.50' : 'background.paper'),
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          endIcon={<KeyboardArrowDown />}
+                          onClick={(e) => handleOpMenu(e, row)}
+                        >
+                          Operation
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+          </Table>
+        </TableContainer>
 
         <Box
           sx={{
@@ -331,7 +361,7 @@ export default function EndingVideoPage() {
             showLastButton
           />
         </Box>
-      </TableContainer>
+      </Paper>
 
       <Menu
         anchorEl={anchorEl?.el}
