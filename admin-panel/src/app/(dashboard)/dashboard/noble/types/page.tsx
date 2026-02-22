@@ -45,6 +45,9 @@ export default function NobleTypesPage() {
     chatBackgroundColor: '#F225F5',
     sort: 1,
   });
+  const [giftsOpen, setGiftsOpen] = useState(false);
+  const [giftsRow, setGiftsRow] = useState<NobleType | null>(null);
+  const [giftsForm, setGiftsForm] = useState({ userId: '', timeDays: '', note: '' });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -125,9 +128,20 @@ export default function NobleTypesPage() {
     );
   };
 
-  const handleGifts = (row: NobleType) => {
-    // TODO: Navigate to gifts for this noble type or open modal
-    alert(`Gifts for ${row.nobleName} - API integration pending`);
+  const handleGiftsOpen = (row: NobleType) => {
+    setGiftsRow(row);
+    setGiftsForm({ userId: '', timeDays: '', note: '' });
+    setGiftsOpen(true);
+  };
+
+  const handleGiftsClose = () => {
+    setGiftsOpen(false);
+    setGiftsRow(null);
+  };
+
+  const handleGiftsConfirm = () => {
+    // TODO: API call with giftsForm and giftsRow
+    handleGiftsClose();
   };
 
   return (
@@ -228,7 +242,7 @@ export default function NobleTypesPage() {
                   <TableCell sx={{ width: 56 }}>
                     <OperationButton
                       items={[
-                        { label: 'Gifts', onClick: () => handleGifts(row), icon: <CardGiftcard fontSize="small" /> },
+                        { label: 'Gifts', onClick: () => handleGiftsOpen(row), icon: <CardGiftcard fontSize="small" /> },
                         { label: 'Edit', onClick: () => handleEdit(row), icon: <Edit fontSize="small" /> },
                       ]}
                       dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
@@ -262,6 +276,47 @@ export default function NobleTypesPage() {
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleDialogConfirm} disabled={!form.nobleName.trim()}>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={giftsOpen} onClose={handleGiftsClose} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          Gifts
+          <IconButton size="small" onClick={handleGiftsClose} aria-label="Close">
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+          <TextField
+            label="User ID"
+            value={giftsForm.userId}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, userId: e.target.value }))}
+            fullWidth
+            size="small"
+          />
+          <TextField
+            label="Time (Days)"
+            type="number"
+            value={giftsForm.timeDays}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, timeDays: e.target.value }))}
+            fullWidth
+            size="small"
+            placeholder="e.g. 7"
+            InputProps={{ inputProps: { min: 0 } }}
+          />
+          <TextField
+            label="Note"
+            value={giftsForm.note}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, note: e.target.value }))}
+            fullWidth
+            size="small"
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button onClick={handleGiftsClose}>Cancel</Button>
+          <Button variant="contained" onClick={handleGiftsConfirm}>
             Confirm
           </Button>
         </DialogActions>

@@ -62,6 +62,8 @@ export default function FancyNumbersPage() {
     price: 0,
     type: 'Ordinary',
   });
+  const [recycleModalOpen, setRecycleModalOpen] = useState(false);
+  const [recycleRow, setRecycleRow] = useState<FancyNumber | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -143,11 +145,24 @@ export default function FancyNumbersPage() {
     setTotal((t) => Math.max(0, t - 1));
   };
 
-  const handleRecycle = async (row: FancyNumber) => {
-    await recycleFancyNumber(row.id);
+  const handleRecycleClick = (row: FancyNumber) => {
+    setRecycleRow(row);
+    setRecycleModalOpen(true);
+  };
+
+  const handleRecycleConfirm = async () => {
+    if (!recycleRow) return;
+    await recycleFancyNumber(recycleRow.id);
     setData((prev) =>
-      prev.map((r) => (r.id === row.id ? { ...r, purchased: false, userId: 0, anchorNickname: '-' } : r))
+      prev.map((r) => (r.id === recycleRow.id ? { ...r, purchased: false, userId: 0, anchorNickname: '-' } : r))
     );
+    setRecycleModalOpen(false);
+    setRecycleRow(null);
+  };
+
+  const handleRecycleModalClose = () => {
+    setRecycleModalOpen(false);
+    setRecycleRow(null);
   };
 
   const handleSell = async (row: FancyNumber) => {
@@ -279,7 +294,7 @@ export default function FancyNumbersPage() {
                   <TableCell sx={{ width: 56 }}>
                     <OperationButton
                       items={[
-                        ...(row.purchased ? [{ label: 'Recycle', onClick: () => handleRecycle(row), icon: <Recycling fontSize="small" /> }] : [{ label: 'Sell', onClick: () => handleSell(row), icon: <Sell fontSize="small" /> }]),
+                        ...(row.purchased ? [{ label: 'Recycle', onClick: () => handleRecycleClick(row), icon: <Recycling fontSize="small" /> }] : [{ label: 'Sell', onClick: () => handleSell(row), icon: <Sell fontSize="small" /> }]),
                         { label: 'Edit', onClick: () => handleEdit(row), icon: <Edit fontSize="small" /> },
                       ]}
                       dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
@@ -372,6 +387,27 @@ export default function FancyNumbersPage() {
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleDialogConfirm} disabled={!form.fancyNumber.trim()}>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={recycleModalOpen} onClose={handleRecycleModalClose}>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          Prompt
+          <IconButton size="small" onClick={handleRecycleModalClose} aria-label="Close">
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ color: 'warning.main', fontSize: 32 }}>⚠</Box>
+            <Typography>Whether to recycle good accounts</Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={handleRecycleModalClose}>Cancel</Button>
+          <Button variant="contained" onClick={handleRecycleConfirm}>
             Confirm
           </Button>
         </DialogActions>
