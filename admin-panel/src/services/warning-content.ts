@@ -24,6 +24,20 @@ export async function fetchWarningContent(keyword?: string): Promise<WarningCont
   return [...DEMO_DATA];
 }
 
+export async function updateWarningContent(
+  id: number,
+  payload: Pick<WarningContent, 'content' | 'status'>
+): Promise<WarningContent> {
+  // TODO: return api.put(`${ENDPOINT}/${id}`, payload)
+  await new Promise((r) => setTimeout(r, 200));
+  const idx = DEMO_DATA.findIndex((r) => r.id === id);
+  if (idx >= 0) {
+    DEMO_DATA[idx] = { ...DEMO_DATA[idx], ...payload };
+    return DEMO_DATA[idx];
+  }
+  throw new Error('Not found');
+}
+
 export async function deleteWarningContent(id: number): Promise<void> {
   // TODO: return api.delete(`${ENDPOINT}/${id}`)
   await new Promise((r) => setTimeout(r, 200));

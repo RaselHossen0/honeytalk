@@ -107,7 +107,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             sx={{
               position: 'fixed',
               right: { xs: 16, sm: 24 },
-              bottom: { xs: 16, sm: 24 },
+              // Extra bottom offset so rotated button stays fully on screen (rotation extends it downward)
+              bottom: { xs: 70, sm: 80 },
               writingMode: 'vertical-rl',
               textOrientation: 'mixed',
               transform: 'rotate(-90deg)',
