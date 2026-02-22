@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
   Box,
@@ -22,8 +21,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  IconButton,
 } from '@mui/material';
-import { Add, Edit, Delete, CardGiftcard } from '@mui/icons-material';
+import { Add, Edit, Delete, CardGiftcard, Close } from '@mui/icons-material';
 import { OperationButton } from '@/components/common/OperationButton';
 import { useTabsStore } from '@/store/tabs';
 import { ImageUpload } from '@/components/common/ImageUpload';
@@ -31,12 +31,14 @@ import type { HeadFrame } from '@/types/head-frame';
 import { demoHeadFrames } from '@/lib/demo-data';
 
 export default function HeadFrameListPage() {
-  const router = useRouter();
   const addTab = useTabsStore((s) => s.addTab);
   const [data, setData] = useState<HeadFrame[]>(demoHeadFrames);
   const [editOpen, setEditOpen] = useState(false);
   const [editing, setEditing] = useState<HeadFrame | null>(null);
   const [form, setForm] = useState({ name: '', price: 0, timeDays: 30, imageUrl: '', unban: 'Yes' as 'Yes' | 'No', sort: 100 });
+  const [giftsOpen, setGiftsOpen] = useState(false);
+  const [giftsRow, setGiftsRow] = useState<HeadFrame | null>(null);
+  const [giftsForm, setGiftsForm] = useState({ userId: '', timeDays: '', note: '' });
 
   useEffect(() => {
     addTab({
@@ -65,8 +67,20 @@ export default function HeadFrameListPage() {
     }
   };
 
-  const handleGifts = (row: HeadFrame) => {
-    router.push(`/dashboard/head-frame/gift-record?frameId=${row.id}`);
+  const handleGiftsOpen = (row: HeadFrame) => {
+    setGiftsRow(row);
+    setGiftsForm({ userId: '', timeDays: '', note: '' });
+    setGiftsOpen(true);
+  };
+
+  const handleGiftsClose = () => {
+    setGiftsOpen(false);
+    setGiftsRow(null);
+  };
+
+  const handleGiftsConfirm = () => {
+    // TODO: API call with giftsForm and giftsRow
+    handleGiftsClose();
   };
 
   const handleSave = () => {
@@ -130,7 +144,7 @@ export default function HeadFrameListPage() {
                 <TableCell align="right" sx={{ width: 56 }}>
                   <OperationButton
                     items={[
-                      { label: 'Gifts', onClick: () => handleGifts(row), icon: <CardGiftcard fontSize="small" /> },
+                      { label: 'Gifts', onClick: () => handleGiftsOpen(row), icon: <CardGiftcard fontSize="small" /> },
                       { label: 'Edit', onClick: () => handleEdit(row), icon: <Edit fontSize="small" /> },
                     ]}
                     dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
@@ -162,6 +176,45 @@ export default function HeadFrameListPage() {
           <Button onClick={() => setEditOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleSave}>
             Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={giftsOpen} onClose={handleGiftsClose} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          Gifts
+          <IconButton size="small" onClick={handleGiftsClose} aria-label="Close">
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+          <TextField
+            label="User ID"
+            value={giftsForm.userId}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, userId: e.target.value }))}
+            fullWidth
+            size="small"
+          />
+          <TextField
+            label="Time(Days)"
+            value={giftsForm.timeDays}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, timeDays: e.target.value }))}
+            fullWidth
+            size="small"
+            placeholder="e.g. 7"
+          />
+          <TextField
+            label="Note"
+            value={giftsForm.note}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, note: e.target.value }))}
+            fullWidth
+            size="small"
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button onClick={handleGiftsClose}>Cancel</Button>
+          <Button variant="contained" onClick={handleGiftsConfirm}>
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>
