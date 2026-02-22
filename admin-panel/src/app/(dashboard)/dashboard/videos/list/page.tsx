@@ -108,6 +108,37 @@ export default function ShortVideoListPage() {
   const totalPages = Math.ceil(total / perPage) || 1;
   const allSelected = data.length > 0 && selected.length === data.length;
 
+  const stickyFirst = {
+    position: 'sticky' as const,
+    left: 0,
+    zIndex: 3,
+    minWidth: 48,
+    width: 48,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyNumber = {
+    position: 'sticky' as const,
+    left: 48,
+    zIndex: 3,
+    minWidth: 90,
+    width: 90,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyLast = {
+    position: 'sticky' as const,
+    right: 0,
+    zIndex: 3,
+    minWidth: 100,
+    width: 100,
+    bgcolor: 'grey.50',
+    boxShadow: '-2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyFirstBody = (bg: string) => ({ ...stickyFirst, zIndex: 2, bgcolor: bg });
+  const stickyNumberBody = (bg: string) => ({ ...stickyNumber, zIndex: 2, bgcolor: bg });
+  const stickyLastBody = (bg: string) => ({ ...stickyLast, zIndex: 2, bgcolor: bg });
+
   return (
     <Box>
       <Grid container spacing={2} sx={{ mb: 2 }}>
@@ -195,92 +226,96 @@ export default function ShortVideoListPage() {
         </Button>
       </Box>
 
-      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2, overflowX: 'auto' }}>
-        <Table size="small">
-          <TableHead>
-            <TableRow sx={{ bgcolor: 'grey.50' }}>
-              <TableCell padding="checkbox">
-                <Checkbox checked={allSelected} indeterminate={selected.length > 0 && selected.length < data.length} onChange={handleSelectAll} size="small" />
-              </TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Number</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Publisher ID</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Publisher</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Publish Content</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Mini Video</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 600 }} align="right">Gift revenue</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Recommended</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Release time</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Review</TableCell>
-              <TableCell sx={{ fontWeight: 600, width: 56 }} align="right">Operation</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={13} align="center" sx={{ py: 4 }}>
-                  Loading...
+      <Paper variant="outlined" sx={{ borderRadius: 2, overflow: 'hidden' }}>
+        <TableContainer sx={{ overflowX: 'auto', overflowY: 'visible', width: '100%' }}>
+          <Table size="small" sx={{ minWidth: 1500 }}>
+            <TableHead>
+              <TableRow sx={{ bgcolor: 'grey.50' }}>
+                <TableCell padding="checkbox" sx={{ ...stickyFirst }}>
+                  <Checkbox checked={allSelected} indeterminate={selected.length > 0 && selected.length < data.length} onChange={handleSelectAll} size="small" />
                 </TableCell>
+                <TableCell sx={{ ...stickyNumber, fontWeight: 600 }}>Number</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Publisher ID</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Publisher</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Type</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 160 }}>Publish Content</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Mini Video</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Status</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 100 }} align="right">Gift revenue</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>Recommended</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 150 }}>Release time</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Review</TableCell>
+                <TableCell sx={{ ...stickyLast, fontWeight: 600 }} align="right">Operation</TableCell>
               </TableRow>
-            ) : (
-              data.map((row) => (
-                <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
-                  <TableCell padding="checkbox">
-                    <Checkbox checked={selected.includes(row.id)} onChange={() => handleSelectOne(row.id)} size="small" />
-                  </TableCell>
-                  <TableCell>{row.number}</TableCell>
-                  <TableCell>{row.publisherId}</TableCell>
-                  <TableCell>{row.publisher}</TableCell>
-                  <TableCell>{row.type}</TableCell>
-                  <TableCell sx={{ maxWidth: 160 }}>{row.publishContent}</TableCell>
-                  <TableCell>
-                    <Box sx={{ position: 'relative', width: 80, height: 45 }}>
-                      {row.videoThumbnailUrl ? (
-                        <Box
-                          component="img"
-                          src={row.videoThumbnailUrl}
-                          alt=""
-                          sx={{ width: 80, height: 45, objectFit: 'cover', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}
-                        />
-                      ) : (
-                        <Box sx={{ width: 80, height: 45, bgcolor: 'grey.300', borderRadius: 1 }} />
-                      )}
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          inset: 0,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          borderRadius: 1,
-                          bgcolor: 'rgba(0,0,0,0.3)',
-                        }}
-                      >
-                        <Box sx={{ width: 24, height: 24, borderRadius: '50%', bgcolor: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
-                          ▶
-                        </Box>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell>{row.status}</TableCell>
-                  <TableCell align="right">{row.giftRevenue != null ? row.giftRevenue.toFixed(2) : 'None'}</TableCell>
-                  <TableCell>{row.recommended}</TableCell>
-                  <TableCell>{row.releaseTime}</TableCell>
-                  <TableCell>{row.review}</TableCell>
-                  <TableCell align="right" sx={{ width: 56 }}>
-                    <OperationButton
-                      items={[
-                        { label: 'Comment list', onClick: () => handleCommentList(row), icon: <Chat fontSize="small" /> },
-                      ]}
-                      dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
-                    />
+            </TableHead>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={13} align="center" sx={{ py: 4 }}>
+                    Loading...
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                data.map((row, index) => (
+                  <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
+                    <TableCell padding="checkbox" sx={stickyFirstBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                      <Checkbox checked={selected.includes(row.id)} onChange={() => handleSelectOne(row.id)} size="small" />
+                    </TableCell>
+                    <TableCell sx={stickyNumberBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                      {row.number}
+                    </TableCell>
+                    <TableCell>{row.publisherId}</TableCell>
+                    <TableCell>{row.publisher}</TableCell>
+                    <TableCell>{row.type}</TableCell>
+                    <TableCell sx={{ maxWidth: 160 }}>{row.publishContent}</TableCell>
+                    <TableCell>
+                      <Box sx={{ position: 'relative', width: 80, height: 45 }}>
+                        {row.videoThumbnailUrl ? (
+                          <Box
+                            component="img"
+                            src={row.videoThumbnailUrl}
+                            alt=""
+                            sx={{ width: 80, height: 45, objectFit: 'cover', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}
+                          />
+                        ) : (
+                          <Box sx={{ width: 80, height: 45, bgcolor: 'grey.300', borderRadius: 1 }} />
+                        )}
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 1,
+                            bgcolor: 'rgba(0,0,0,0.3)',
+                          }}
+                        >
+                          <Box sx={{ width: 24, height: 24, borderRadius: '50%', bgcolor: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
+                            ▶
+                          </Box>
+                        </Box>
+                      </Box>
+                    </TableCell>
+                    <TableCell>{row.status}</TableCell>
+                    <TableCell align="right">{row.giftRevenue != null ? row.giftRevenue.toFixed(2) : 'None'}</TableCell>
+                    <TableCell>{row.recommended}</TableCell>
+                    <TableCell>{row.releaseTime}</TableCell>
+                    <TableCell>{row.review}</TableCell>
+                    <TableCell align="right" sx={{ ...stickyLastBody(index % 2 === 1 ? 'grey.50' : 'background.paper'), whiteSpace: 'nowrap' }}>
+                      <OperationButton
+                        items={[
+                          { label: 'Comment list', onClick: () => handleCommentList(row), icon: <Chat fontSize="small" /> },
+                        ]}
+                        dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2, p: 2, borderTop: 1, borderColor: 'divider' }}>
           <Typography variant="body2" color="text.secondary">
@@ -296,7 +331,7 @@ export default function ShortVideoListPage() {
           </FormControl>
           <Pagination count={totalPages} page={page + 1} onChange={(_, p) => setPage(p - 1)} color="primary" size="small" showFirstButton showLastButton />
         </Box>
-      </TableContainer>
+      </Paper>
     </Box>
   );
 }
