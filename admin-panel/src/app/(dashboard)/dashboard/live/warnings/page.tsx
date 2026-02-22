@@ -122,7 +122,7 @@ export default function WarningsPage() {
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, flexWrap: 'wrap' }}>
         <Button variant="contained" startIcon={<Add />}>
-          + Add
+          Add
         </Button>
         <TextField
           size="small"
@@ -133,7 +133,7 @@ export default function WarningsPage() {
           sx={{ minWidth: 260 }}
         />
         <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>
-          Q Query
+          Query
         </Button>
         <Button variant="outlined" color="error" onClick={handleClear}>
           Clear conditions

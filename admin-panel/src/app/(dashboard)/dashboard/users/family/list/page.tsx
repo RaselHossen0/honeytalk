@@ -336,7 +336,7 @@ export default function FamilyListPage() {
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
         <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>
-          Q Query
+          Query
         </Button>
         <Button variant="outlined" color="error" onClick={handleClear}>
           Clear conditions
@@ -345,7 +345,7 @@ export default function FamilyListPage() {
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
         <Button variant="contained" startIcon={<Add />}>
-          + Add
+          Add
         </Button>
         <Button variant="outlined" color="error" onClick={handleClearIncome}>
           One click clearing of family income

@@ -121,7 +121,7 @@ export default function FamilyReviewPage() {
           </FormControl>
           <TextField size="small" type="date" label="Creation time" InputLabelProps={{ shrink: true }} value={filters.creationTimeStart} onChange={(e) => setFilters((p) => ({ ...p, creationTimeStart: e.target.value }))} sx={{ minWidth: 150 }} />
           <TextField size="small" type="date" label="to" InputLabelProps={{ shrink: true }} value={filters.creationTimeEnd} onChange={(e) => setFilters((p) => ({ ...p, creationTimeEnd: e.target.value }))} sx={{ minWidth: 150 }} />
-          <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Q Query</Button>
+          <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Query</Button>
           <Button variant="outlined" color="error" startIcon={<Clear />} onClick={handleClear}>Clear conditions</Button>
         </Box>
       </Paper>

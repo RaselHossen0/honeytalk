@@ -18,10 +18,15 @@ import {
   Select,
   MenuItem,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import { Delete, Send } from '@mui/icons-material';
 import { OperationButton } from '@/components/common/OperationButton';
 import { useTabsStore } from '@/store/tabs';
+import type { BusinessQueueItem } from '@/types/sms';
 import { fetchBusinessQueue, sendBusinessQueueItem, deleteBusinessQueueItem, batchDeleteBusinessQueue } from '@/services/sms';
 
 export default function BusinessQueueListPage() {
@@ -32,6 +37,8 @@ export default function BusinessQueueListPage() {
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<number[]>([]);
+  const [viewDetailsOpen, setViewDetailsOpen] = useState(false);
+  const [viewing, setViewing] = useState<BusinessQueueItem | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -89,6 +96,11 @@ export default function BusinessQueueListPage() {
   const totalPages = Math.ceil(total / perPage) || 1;
   const allSelected = data.length > 0 && selected.length === data.length;
 
+  const handleViewDetails = (row: BusinessQueueItem) => {
+    setViewing(row);
+    setViewDetailsOpen(true);
+  };
+
   return (
     <Box>
       <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2, overflowX: 'auto' }}>
@@ -131,8 +143,14 @@ export default function BusinessQueueListPage() {
                   <TableCell>{row.userId}</TableCell>
                   <TableCell>{row.title}</TableCell>
                   <TableCell>
-                    <Typography component="a" href="#" variant="body2" color="primary" sx={{ cursor: 'pointer' }}>
-                      {row.content}
+                    <Typography
+                      component="button"
+                      variant="body2"
+                      color="primary"
+                      onClick={() => handleViewDetails(row)}
+                      sx={{ cursor: 'pointer', bg: 'none', border: 'none', p: 0, textDecoration: 'underline' }}
+                    >
+                      View
                     </Typography>
                   </TableCell>
                   <TableCell>{row.verificationCode}</TableCell>
@@ -191,6 +209,43 @@ export default function BusinessQueueListPage() {
           </Box>
         </Box>
       </TableContainer>
+
+      <Dialog open={viewDetailsOpen} onClose={() => setViewDetailsOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>View Details</DialogTitle>
+        <DialogContent>
+          {viewing && (
+            <TableContainer sx={{ mt: 1 }}>
+              <Table size="small">
+                <TableHead>
+                  <TableRow sx={{ bgcolor: 'grey.50' }}>
+                    <TableCell sx={{ fontWeight: 600 }}>Content</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Verification Code</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Creation time</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Time</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Result</TableCell>
+                    <TableCell sx={{ fontWeight: 600 }}>Log information</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>{viewing.content}</TableCell>
+                    <TableCell>{viewing.verificationCode}</TableCell>
+                    <TableCell>{viewing.creationTime}</TableCell>
+                    <TableCell>{viewing.time ?? viewing.creationTime}</TableCell>
+                    <TableCell>{viewing.status ?? '-'}</TableCell>
+                    <TableCell>{viewing.result ?? '-'}</TableCell>
+                    <TableCell>{viewing.logInformation ?? '-'}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setViewDetailsOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

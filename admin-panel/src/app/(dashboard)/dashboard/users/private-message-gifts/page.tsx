@@ -174,7 +174,7 @@ export default function PrivateMessageGiftsPage() {
         </Grid>
         <Grid item xs={12} display="flex" flexWrap="wrap" gap={2} alignItems="center">
           <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>
-            Q Query
+            Query
           </Button>
           <Button variant="outlined" color="error" onClick={handleClear}>
             Clear conditions

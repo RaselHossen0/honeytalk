@@ -155,7 +155,7 @@ function ShortVideoCommentsContent() {
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
         <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>
-          Q Query
+          Query
         </Button>
         <Button variant="outlined" color="error" onClick={handleClear}>
           Clear conditions

@@ -16,10 +16,10 @@ const MESSAGES_ENDPOINT = '/api/sms/messages';
 const BUSINESS_QUEUE_ENDPOINT = '/api/sms/business-queue';
 
 const DEMO_INTERFACES: SmsInterface[] = [
-  { id: 1, number: 17, interfaceName: 'AliCloud SMS', description: '', status: 'Valid' },
-  { id: 2, number: 19, interfaceName: 'Vonage SMS', description: 'https://www.vonage.com', status: 'Invalid' },
-  { id: 3, number: 21, interfaceName: 'ENGAGES_SMS', description: 'https://www.engagelab.com/', status: 'Valid' },
-  { id: 4, number: 22, interfaceName: 'ENGAGES_OTP', description: 'https://www.engagelab.com/', status: 'Valid' },
+  { id: 1, number: 17, interfaceName: 'AliCloud SMS', categoryName: 'ALI', smsInterface: '123', account: '', smsInterfaceType: 'aliyun', password: '', description: '', status: 'Valid' },
+  { id: 2, number: 19, interfaceName: 'Vonage SMS', categoryName: 'Vonage', smsInterface: '456', account: 'user@example.com', smsInterfaceType: 'vonage', password: '***', description: 'https://www.vonage.com', status: 'Invalid' },
+  { id: 3, number: 21, interfaceName: 'ENGAGES_SMS', categoryName: 'ENGAGE', smsInterface: '789', account: '', smsInterfaceType: 'engage', password: '', description: 'https://www.engagelab.com/', status: 'Valid' },
+  { id: 4, number: 22, interfaceName: 'ENGAGES_OTP', categoryName: 'ENGAGE', smsInterface: '101', account: '', smsInterfaceType: 'engage_otp', password: '', description: 'https://www.engagelab.com/', status: 'Valid' },
 ];
 
 const DEMO_MESSAGES: SystemMessage[] = [
@@ -36,11 +36,11 @@ const DEMO_MESSAGES: SystemMessage[] = [
 ];
 
 const DEMO_QUEUE: BusinessQueueItem[] = [
-  { id: 1, number: 13395, type: 'SMS', recipient: '860****3628', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:39:20', status: 'Yes', result: 'Failure', logInformation: 'Test send' },
-  { id: 2, number: 13394, type: 'SMS', recipient: '860****3629', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:38:15', status: 'Yes', result: 'Failure', logInformation: 'Test send' },
-  { id: 3, number: 13393, type: 'SMS', recipient: '861****1234', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '123456', creationTime: '2026-02-17 21:37:00', status: 'Yes', result: 'Success', logInformation: 'Sent' },
-  { id: 4, number: 13392, type: 'SMS', recipient: '919****5678', userId: '166593', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:36:45', status: 'Yes', result: 'Failure', logInformation: 'Test send' },
-  { id: 5, number: 13391, type: 'SMS', recipient: '1***5551234', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '654321', creationTime: '2026-02-17 21:35:30', status: 'Yes', result: 'Success', logInformation: 'Sent' },
+  { id: 1, number: 13395, type: 'SMS', recipient: '860****3628', userId: '0', title: 'SMS verification code', content: 'ew', verificationCode: '888888', creationTime: '2026-02-22 21:58:45', time: '2026-02-22 21:58:45', status: 'Yes', result: 'Failure', logInformation: '测试发送' },
+  { id: 2, number: 13394, type: 'SMS', recipient: '860****3629', userId: '0', title: 'SMS verification code', content: 'ew', verificationCode: '888888', creationTime: '2026-02-22 18:41:06', time: '2026-02-22 18:41:06', status: 'Yes', result: 'Failure', logInformation: '测试发送' },
+  { id: 3, number: 13393, type: 'SMS', recipient: '861****1234', userId: '0', title: 'SMS verification code', content: 'ew', verificationCode: '888888', creationTime: '2026-02-22 18:37:28', time: '2026-02-22 18:37:28', status: 'Yes', result: 'Failure', logInformation: '测试发送' },
+  { id: 4, number: 13392, type: 'SMS', recipient: '919****5678', userId: '166593', title: 'SMS verification code', content: 'ew', verificationCode: '888888', creationTime: '2026-02-22 18:33:08', time: '2026-02-22 18:33:08', status: 'Yes', result: 'Failure', logInformation: '测试发送' },
+  { id: 5, number: 13391, type: 'SMS', recipient: '1***5551234', userId: '0', title: 'SMS verification code', content: 'ew', verificationCode: '888888', creationTime: '2026-02-22 18:30:21', time: '2026-02-22 18:30:21', status: 'Yes', result: 'Failure', logInformation: '测试发送' },
 ];
 
 let interfacesData = [...DEMO_INTERFACES];
@@ -60,7 +60,12 @@ export async function createSmsInterface(payload: SmsInterfacePayload): Promise<
     id: 100 + interfacesData.length,
     number: maxNum + 1,
     interfaceName: payload.interfaceName,
-    description: payload.description,
+    categoryName: payload.categoryName ?? '',
+    smsInterface: payload.smsInterface ?? '',
+    account: payload.account ?? '',
+    smsInterfaceType: payload.smsInterfaceType ?? '',
+    password: payload.password ?? '',
+    description: payload.description ?? '',
     status: payload.status ?? 'Valid',
   };
   interfacesData.push(newItem);
@@ -130,11 +135,13 @@ export async function fetchBusinessQueue(page = 1, perPage = 10): Promise<{ data
     if (i < queueData.length) {
       data.push(queueData[i]);
     } else {
+      const creationTime = new Date(Date.now() - i * 60000).toISOString().replace('T', ' ').slice(0, 19);
       data.push({
         ...base,
         id: 10000 + i,
         number: 13395 - i,
-        creationTime: new Date(Date.now() - i * 60000).toISOString().replace('T', ' ').slice(0, 19),
+        creationTime,
+        time: creationTime,
       });
     }
   }

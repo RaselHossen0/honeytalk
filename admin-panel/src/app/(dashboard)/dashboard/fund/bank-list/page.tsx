@@ -112,7 +112,7 @@ export default function BankListPage() {
           </FormControl>
           <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Query</Button>
           <Button variant="outlined" color="error" startIcon={<Clear />} onClick={handleClear}>Clear conditions</Button>
-          <Button variant="contained" startIcon={<Add />} onClick={handleAdd} sx={{ ml: 1 }}>+ Add</Button>
+          <Button variant="contained" startIcon={<Add />} onClick={handleAdd} sx={{ ml: 1 }}>Add</Button>
         </Box>
       </Paper>
 

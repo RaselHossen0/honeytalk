@@ -123,7 +123,7 @@ export default function CarPricesPage() {
       <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 2, minWidth: 0 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
           <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-            + Add
+            Add
           </Button>
         </Box>
         <TableContainer sx={{ maxHeight: 520, overflowX: 'auto' }}>

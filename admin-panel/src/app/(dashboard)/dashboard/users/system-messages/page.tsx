@@ -117,7 +117,7 @@ export default function SystemMessagesPage() {
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 2 }}>
         <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-          + Add
+          Add
         </Button>
       </Box>
 
@@ -158,7 +158,7 @@ export default function SystemMessagesPage() {
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
         <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>
-          Q Query
+          Query
         </Button>
         <Button variant="outlined" color="error" onClick={handleClear}>
           Clear conditions

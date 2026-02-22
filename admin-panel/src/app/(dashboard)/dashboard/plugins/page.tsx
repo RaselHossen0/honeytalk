@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import { OperationButton } from '@/components/common/OperationButton';
+import { ImageUpload } from '@/components/common/ImageUpload';
 import { useTabsStore } from '@/store/tabs';
 import type { PluginConfig } from '@/types/plugin';
 import { demoPluginConfigs } from '@/lib/demo-data';
@@ -144,20 +145,20 @@ export default function PluginConfigurationPage() {
       </Paper>
 
       <Dialog open={editOpen} onClose={() => setEditOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Edit Plugin</DialogTitle>
+        <DialogTitle>Edit</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <TextField
-            label="Name"
+            label="Game Name"
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
             fullWidth
             required
           />
-          <TextField
-            label="Icon URL"
+          <ImageUpload
+            label="Game Icon"
             value={form.iconUrl}
-            onChange={(e) => setForm((f) => ({ ...f, iconUrl: e.target.value }))}
-            fullWidth
+            onChange={(url) => setForm((f) => ({ ...f, iconUrl: url }))}
+            helperText="Upload rule: Uploaded images can only be JPG/PNG. Files will be stored on AWS S3."
           />
           <FormControl fullWidth>
             <InputLabel>Whether to enable</InputLabel>
@@ -185,7 +186,7 @@ export default function PluginConfigurationPage() {
         <DialogActions>
           <Button onClick={() => setEditOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleSave}>
-            Save
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>

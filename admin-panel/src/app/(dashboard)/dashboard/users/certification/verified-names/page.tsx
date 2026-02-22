@@ -120,7 +120,7 @@ export default function VerifiedNameListPage() {
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
         <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-          + Add
+          Add
         </Button>
         <Button
           variant="outlined"

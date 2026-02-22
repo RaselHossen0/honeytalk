@@ -116,7 +116,7 @@ export default function DynamicCommentListPage() {
             sx={{ minWidth: 180 }}
           />
           <Button variant="contained" startIcon={<Search />} onClick={() => setPage(0)}>
-            Q Query
+            Query
           </Button>
           <Button
             variant="outlined"

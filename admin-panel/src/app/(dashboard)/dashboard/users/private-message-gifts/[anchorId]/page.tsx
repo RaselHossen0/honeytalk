@@ -198,7 +198,7 @@ export default function PrivateMessageGiftDetailsPage({
             sx={{ minWidth: 140 }}
           />
           <Button variant="contained" startIcon={<Search />} onClick={handleQuery} size="medium">
-            Q Query
+            Query
           </Button>
           <Button variant="outlined" color="error" onClick={handleClear} size="medium">
             Clear conditions

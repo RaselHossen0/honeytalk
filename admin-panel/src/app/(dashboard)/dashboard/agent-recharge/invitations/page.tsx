@@ -109,7 +109,7 @@ export default function InvitationRecordPage() {
           <TextField size="small" type="datetime-local" label="to" value={filters.dateEnd} onChange={(e) => setFilters((p) => ({ ...p, dateEnd: e.target.value }))} InputLabelProps={{ shrink: true }} sx={{ minWidth: 180 }} />
           <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Query</Button>
           <Button variant="outlined" color="error" startIcon={<Clear />} onClick={handleClear}>Clear conditions</Button>
-          <Button variant="contained" startIcon={<Add />}>+ Add</Button>
+          <Button variant="contained" startIcon={<Add />}>Add</Button>
         </Box>
       </Paper>
 

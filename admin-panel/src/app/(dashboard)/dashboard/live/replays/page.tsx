@@ -166,7 +166,7 @@ export default function ReplaysPage() {
     <Box>
       <Box sx={{ mb: 2 }}>
         <Button variant="contained" startIcon={<Add />}>
-          + Add
+          Add
         </Button>
       </Box>
 
@@ -251,7 +251,7 @@ export default function ReplaysPage() {
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
         <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>
-          Q Query
+          Query
         </Button>
         <Button variant="outlined" onClick={handleClear}>
           Clear conditions

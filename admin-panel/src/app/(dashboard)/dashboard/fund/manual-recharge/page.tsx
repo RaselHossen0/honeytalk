@@ -173,7 +173,7 @@ export default function ManualRechargePage() {
             Clear conditions
           </Button>
           <Button variant="contained" startIcon={<Add />} onClick={handleAdd}>
-            + Add
+            Add
           </Button>
         </Box>
       </Paper>

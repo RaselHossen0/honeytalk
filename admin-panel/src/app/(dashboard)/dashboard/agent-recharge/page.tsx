@@ -158,7 +158,7 @@ export default function AgentAccountManagementPage() {
           <TextField size="small" type="datetime-local" label="to" value={filters.registrationEnd} onChange={(e) => setFilters((p) => ({ ...p, registrationEnd: e.target.value }))} InputLabelProps={{ shrink: true }} sx={{ minWidth: 180 }} />
           <Button variant="contained" startIcon={<Search />} onClick={handleQuery}>Query</Button>
           <Button variant="outlined" color="error" startIcon={<Clear />} onClick={handleClear}>Clear conditions</Button>
-          <Button variant="contained" component={Link} href="/dashboard/agent-recharge" startIcon={<Add />}>+ Add</Button>
+          <Button variant="contained" component={Link} href="/dashboard/agent-recharge" startIcon={<Add />}>Add</Button>
         </Box>
       </Paper>
 

@@ -42,3 +42,17 @@ export async function uploadAudioToS3(file: File): Promise<string> {
     reader.readAsDataURL(file);
   });
 }
+
+const ACCEPTED_APK_TYPES = ['application/vnd.android.package-archive', 'application/octet-stream'];
+
+export function isAcceptedApkType(type: string, name?: string): boolean {
+  if (ACCEPTED_APK_TYPES.includes(type)) return true;
+  return (name ?? '').toLowerCase().endsWith('.apk');
+}
+
+export async function uploadApkToS3(file: File): Promise<string> {
+  // TODO: Implement real OSS/S3 upload for APK (presigned URL)
+  await new Promise((r) => setTimeout(r, 600)); // Simulate network
+  // Demo: fake OSS URL; replace with real upload response
+  return `https://example.com/versions/${Date.now()}-${file.name}`;
+}

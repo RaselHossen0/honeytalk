@@ -269,7 +269,7 @@ export function UserActionModals({ modal, user, onClose, onConfirm }: UserAction
                 {LOG_TYPES.map((t) => <MenuItem key={t} value={t}>{t}</MenuItem>)}
               </Select>
             </FormControl>
-            <Button variant="contained" size="small">Q Query</Button>
+            <Button variant="contained" size="small">Query</Button>
             <Button variant="outlined" color="error" size="small">Clear conditions</Button>
           </Box>
           <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 360 }}>
@@ -333,7 +333,7 @@ export function UserActionModals({ modal, user, onClose, onConfirm }: UserAction
             <FormControl size="small" sx={{ minWidth: 120 }}><InputLabel>Gift name</InputLabel><Select label="Gift name"><MenuItem value="all">All</MenuItem></Select></FormControl>
             <FormControl size="small" sx={{ minWidth: 80 }}><InputLabel>Year</InputLabel><Select label="Year"><MenuItem value="2026">2026</MenuItem></Select></FormControl>
             <FormControl size="small" sx={{ minWidth: 80 }}><InputLabel>Month</InputLabel><Select label="Month"><MenuItem value="02">02</MenuItem></Select></FormControl>
-            <Button variant="contained" size="small">Q Query</Button>
+            <Button variant="contained" size="small">Query</Button>
             <Button variant="outlined" color="error" size="small">Clear conditions</Button>
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>consumption: — • Family division: — • Gift income: —</Typography>
@@ -362,7 +362,7 @@ export function UserActionModals({ modal, user, onClose, onConfirm }: UserAction
             <FormControl size="small" sx={{ minWidth: 120 }}><InputLabel>Gift name</InputLabel><Select label="Gift name"><MenuItem value="all">All</MenuItem></Select></FormControl>
             <FormControl size="small" sx={{ minWidth: 80 }}><InputLabel>Year</InputLabel><Select label="Year"><MenuItem value="2026">2026</MenuItem></Select></FormControl>
             <FormControl size="small" sx={{ minWidth: 80 }}><InputLabel>Month</InputLabel><Select label="Month"><MenuItem value="02">02</MenuItem></Select></FormControl>
-            <Button variant="contained" size="small">Q Query</Button>
+            <Button variant="contained" size="small">Query</Button>
             <Button variant="outlined" color="error" size="small">Clear conditions</Button>
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Quantity: 0 • Price: 0 Coin</Typography>
@@ -388,7 +388,7 @@ export function UserActionModals({ modal, user, onClose, onConfirm }: UserAction
           <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
             <TextField size="small" label="User ID" value={u.userId} sx={{ width: 120 }} />
             <FormControl size="small" sx={{ minWidth: 100 }}><InputLabel>Status</InputLabel><Select label="Status"><MenuItem value="all">All</MenuItem></Select></FormControl>
-            <Button variant="contained" size="small">Q Query</Button>
+            <Button variant="contained" size="small">Query</Button>
             <Button variant="outlined" color="error" size="small">Clear conditions</Button>
           </Box>
           <TableContainer component={Paper} variant="outlined">
@@ -413,7 +413,7 @@ export function UserActionModals({ modal, user, onClose, onConfirm }: UserAction
           <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
             <TextField size="small" label="Date" type="date" InputLabelProps={{ shrink: true }} sx={{ width: 140 }} />
             <TextField size="small" label="To" type="date" InputLabelProps={{ shrink: true }} sx={{ width: 140 }} />
-            <Button variant="contained" size="small">Q Query</Button>
+            <Button variant="contained" size="small">Query</Button>
             <Button variant="outlined" color="error" size="small">Clear conditions</Button>
           </Box>
           <TableContainer component={Paper} variant="outlined">
