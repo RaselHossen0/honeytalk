@@ -25,3 +25,50 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Sticky first and last columns for long tables with horizontal scroll */
+.MuiTableContainer-root {
+  overflow-x: auto;
+}
+
+.MuiTableContainer-root table thead .MuiTableCell-root:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #f8fafc;
+  box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.08);
+}
+
+.MuiTableContainer-root table thead .MuiTableCell-root:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  background: #f8fafc;
+  box-shadow: -2px 0 4px -2px rgba(0, 0, 0, 0.08);
+}
+
+.MuiTableContainer-root table tbody .MuiTableCell-root:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: inherit;
+  box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+.MuiTableContainer-root table tbody .MuiTableCell-root:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background: inherit;
+  box-shadow: -2px 0 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+.MuiTableContainer-root table tbody tr:nth-child(odd) .MuiTableCell-root:first-child,
+.MuiTableContainer-root table tbody tr:nth-child(odd) .MuiTableCell-root:last-child {
+  background: #fff;
+}
+
+.MuiTableContainer-root table tbody tr:nth-child(even) .MuiTableCell-root:first-child,
+.MuiTableContainer-root table tbody tr:nth-child(even) .MuiTableCell-root:last-child {
+  background: #f8fafc;
+}

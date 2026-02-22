@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import {
   Box,
   Paper,
@@ -17,17 +18,17 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Link,
+  ToggleButtonGroup,
+  ToggleButton,
+  Typography,
 } from '@mui/material';
 import { Add, Edit, Delete } from '@mui/icons-material';
-import { OperationButton } from '@/components/common/OperationButton';
+import { ImageUpload } from '@/components/common/ImageUpload';
 import { useTabsStore } from '@/store/tabs';
-import type { PaymentInterface } from '@/types/fund';
+import type { PaymentInterface, PaymentType } from '@/types/fund';
 import { demoPaymentInterfaces } from '@/lib/demo-data';
+
+const PAYMENT_TYPES: PaymentType[] = ['Offline payment', 'Online Payment', 'WAP payment', 'App payment'];
 
 export default function PaymentInterfacePage() {
   const addTab = useTabsStore((s) => s.addTab);
@@ -35,7 +36,18 @@ export default function PaymentInterfacePage() {
   const [selected, setSelected] = useState<number[]>([]);
   const [editOpen, setEditOpen] = useState(false);
   const [editing, setEditing] = useState<PaymentInterface | null>(null);
-  const [form, setForm] = useState({ name: '', status: 'Valid', automaticWithdrawal: 'No' as 'Yes' | 'No', sort: 0 });
+  const [form, setForm] = useState({
+    name: '',
+    displayName: '',
+    categoryName: '',
+    status: 'Valid' as 'Valid' | 'Invalid',
+    automaticWithdrawal: 'No' as 'Yes' | 'No',
+    withdrawalPaymentAccount: '',
+    paymentType: 'Online Payment' as PaymentType,
+    imageUrl: '',
+    description: '',
+    sort: 0,
+  });
 
   useEffect(() => {
     addTab({
@@ -48,13 +60,35 @@ export default function PaymentInterfacePage() {
 
   const handleAdd = () => {
     setEditing(null);
-    setForm({ name: '', status: 'Valid', automaticWithdrawal: 'No', sort: 0 });
+    setForm({
+      name: '',
+      displayName: '',
+      categoryName: '',
+      status: 'Valid',
+      automaticWithdrawal: 'No',
+      withdrawalPaymentAccount: '',
+      paymentType: 'Online Payment',
+      imageUrl: '',
+      description: '',
+      sort: 1,
+    });
     setEditOpen(true);
   };
 
   const handleEdit = (row: PaymentInterface) => {
     setEditing(row);
-    setForm({ name: row.name, status: row.status, automaticWithdrawal: row.automaticWithdrawal, sort: row.sort });
+    setForm({
+      name: row.name,
+      displayName: row.displayName ?? '',
+      categoryName: row.categoryName,
+      status: row.status as 'Valid' | 'Invalid',
+      automaticWithdrawal: row.automaticWithdrawal,
+      withdrawalPaymentAccount: row.withdrawalPaymentAccount ?? '',
+      paymentType: row.paymentType,
+      imageUrl: row.imageUrl ?? '',
+      description: row.description ?? '',
+      sort: row.sort,
+    });
     setEditOpen(true);
   };
 
@@ -77,7 +111,19 @@ export default function PaymentInterfacePage() {
       setData((prev) =>
         prev.map((r) =>
           r.id === editing.id
-            ? { ...r, name: form.name, status: form.status, automaticWithdrawal: form.automaticWithdrawal, sort: form.sort }
+            ?             {
+                ...r,
+                name: form.name,
+                displayName: form.displayName || undefined,
+                categoryName: form.categoryName,
+                status: form.status,
+                automaticWithdrawal: form.automaticWithdrawal,
+                withdrawalPaymentAccount: form.withdrawalPaymentAccount,
+                paymentType: form.paymentType,
+                imageUrl: form.imageUrl,
+                description: form.description,
+                sort: form.sort,
+              }
             : r
         )
       );
@@ -86,7 +132,21 @@ export default function PaymentInterfacePage() {
       const nextNum = Math.max(...data.map((r) => r.number), 0) + 1;
       setData((prev) => [
         ...prev,
-        { id: nextId, number: nextNum, name: form.name, status: form.status, receivedPayment: 0, automaticWithdrawal: form.automaticWithdrawal, sort: form.sort },
+        {
+          id: nextId,
+          number: nextNum,
+          name: form.name,
+          displayName: form.displayName || undefined,
+          categoryName: form.categoryName,
+          status: form.status,
+          receivedPayment: 0,
+          automaticWithdrawal: form.automaticWithdrawal,
+          withdrawalPaymentAccount: form.withdrawalPaymentAccount,
+          paymentType: form.paymentType,
+          imageUrl: form.imageUrl,
+          description: form.description,
+          sort: form.sort,
+        },
       ]);
     }
     setEditOpen(false);
@@ -99,6 +159,10 @@ export default function PaymentInterfacePage() {
 
   const handleSelectOne = (id: number) => {
     setSelected((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
+  };
+
+  const handleAddConfiguration = () => {
+    // Placeholder for configuration row - can be extended later
   };
 
   return (
@@ -126,11 +190,16 @@ export default function PaymentInterfacePage() {
                 />
               </TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Number</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Payment Interface Name</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>* Payment Interface</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>Category name</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Received Payment</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Automatic withdrawal payment account</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>Automatic</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>withdrawal payment account</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>Payment Type</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>image</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Sort</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
               <TableCell sx={{ fontWeight: 600 }} align="right">
                 Operation
               </TableCell>
@@ -144,20 +213,32 @@ export default function PaymentInterfacePage() {
                 </TableCell>
                 <TableCell>{row.number}</TableCell>
                 <TableCell>{row.name}</TableCell>
+                <TableCell>{row.displayName ?? row.name}</TableCell>
+                <TableCell>{row.categoryName}</TableCell>
                 <TableCell sx={{ color: row.status === 'Valid' ? 'primary.main' : 'text.secondary' }}>{row.status}</TableCell>
-                <TableCell>
-                  {row.receivedPayment.toFixed(2)}{' '}
-                  <Link component="button" sx={{ cursor: 'pointer' }} onClick={() => alert(`View payment details for ${row.name}`)}>
-                    View
-                  </Link>
-                </TableCell>
                 <TableCell>{row.automaticWithdrawal}</TableCell>
+                <TableCell>{row.withdrawalPaymentAccount || '-'}</TableCell>
+                <TableCell>{row.paymentType}</TableCell>
+                <TableCell>
+                  {row.imageUrl ? (
+                    <Box sx={{ width: 40, height: 40, position: 'relative', borderRadius: 1, overflow: 'hidden' }}>
+                      <Image src={row.imageUrl} alt={row.name} fill sizes="40px" style={{ objectFit: 'contain' }} unoptimized />
+                    </Box>
+                  ) : (
+                    '-'
+                  )}
+                </TableCell>
                 <TableCell>{row.sort}</TableCell>
-                <TableCell align="right" sx={{ width: 56 }}>
-                  <OperationButton
-                    items={[{ label: 'Edit', onClick: () => handleEdit(row), icon: <Edit fontSize="small" /> }]}
-                    dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
-                  />
+                <TableCell sx={{ maxWidth: 120 }}>{row.description || '-'}</TableCell>
+                <TableCell align="right">
+                  <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'flex-end' }}>
+                    <Button size="small" variant="contained" color="primary" startIcon={<Edit fontSize="small" />} onClick={() => handleEdit(row)}>
+                      Edit
+                    </Button>
+                    <Button size="small" variant="outlined" color="error" startIcon={<Delete fontSize="small" />} onClick={() => handleDelete(row)}>
+                      Delete
+                    </Button>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}
@@ -168,27 +249,89 @@ export default function PaymentInterfacePage() {
       <Dialog open={editOpen} onClose={() => setEditOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{editing ? 'Edit' : 'Add'} Payment interface</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
-          <TextField label="Payment Interface Name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} fullWidth required />
-          <FormControl fullWidth>
-            <InputLabel>Status</InputLabel>
-            <Select value={form.status} label="Status" onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}>
-              <MenuItem value="Valid">Valid</MenuItem>
-              <MenuItem value="Invalid">Invalid</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>Automatic withdrawal payment account</InputLabel>
-            <Select value={form.automaticWithdrawal} label="Automatic withdrawal payment account" onChange={(e) => setForm((f) => ({ ...f, automaticWithdrawal: e.target.value as 'Yes' | 'No' }))}>
-              <MenuItem value="Yes">Yes</MenuItem>
-              <MenuItem value="No">No</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            required
+            label="* Payment Interface"
+            value={form.name}
+            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            fullWidth
+            placeholder="e.g. Google Pay"
+          />
+          <TextField label="Name" value={form.displayName} onChange={(e) => setForm((f) => ({ ...f, displayName: e.target.value }))} fullWidth />
+          <TextField label="Category name" value={form.categoryName} onChange={(e) => setForm((f) => ({ ...f, categoryName: e.target.value }))} fullWidth placeholder="e.g. GooglePay" />
+          <Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+              Status
+            </Typography>
+            <ToggleButtonGroup
+              value={form.status}
+              exclusive
+              onChange={(_, v) => v != null && setForm((f) => ({ ...f, status: v }))}
+              size="small"
+            >
+              <ToggleButton value="Valid">Valid</ToggleButton>
+              <ToggleButton value="Invalid">Invalid</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+              Automatic
+            </Typography>
+            <ToggleButtonGroup
+              value={form.automaticWithdrawal}
+              exclusive
+              onChange={(_, v) => v != null && setForm((f) => ({ ...f, automaticWithdrawal: v }))}
+              size="small"
+            >
+              <ToggleButton value="Yes">Yes</ToggleButton>
+              <ToggleButton value="No">No</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+          <TextField
+            label="withdrawal payment account"
+            value={form.withdrawalPaymentAccount}
+            onChange={(e) => setForm((f) => ({ ...f, withdrawalPaymentAccount: e.target.value }))}
+            fullWidth
+          />
+          <Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+              Payment Type
+            </Typography>
+            <ToggleButtonGroup
+              value={form.paymentType}
+              exclusive
+              onChange={(_, v) => v != null && setForm((f) => ({ ...f, paymentType: v }))}
+              size="small"
+              sx={{ flexWrap: 'wrap' }}
+            >
+              {PAYMENT_TYPES.map((t) => (
+                <ToggleButton key={t} value={t}>
+                  {t}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+          </Box>
+          <ImageUpload
+            label="image"
+            value={form.imageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+            helperText="Upload rule: Uploaded images can only be JPG/PNG"
+          />
           <TextField label="Sort" type="number" value={form.sort} onChange={(e) => setForm((f) => ({ ...f, sort: parseInt(e.target.value, 10) || 0 }))} fullWidth />
+          <TextField label="Description" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} fullWidth multiline rows={2} />
+          <Box sx={{ pt: 1 }}>
+            <Typography variant="body2" fontWeight={500} sx={{ mb: 1 }}>
+              Configuration
+            </Typography>
+            <Button variant="contained" size="small" onClick={handleAddConfiguration}>
+              AddConfiguration
+            </Button>
+          </Box>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setEditOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>
-            Save
+          <Button variant="contained" onClick={handleSave} disabled={!form.name.trim()}>
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>

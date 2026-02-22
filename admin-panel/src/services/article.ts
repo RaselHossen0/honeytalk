@@ -6,11 +6,11 @@
 import type { Article, ArticlePayload } from '@/types/article';
 
 const DEMO_ARTICLES: Article[] = [
-  { id: 1, number: 55, articleTitle: 'Level', category: 'Level', status: 'Valid', creationTime: '2025-10-31 10:07:01', updateTime: '2024-06-13 08:58:23', sort: 0, clickCount: 0 },
-  { id: 2, number: 54, articleTitle: 'Withdrawal agreement', category: 'Withdrawal agreement', status: 'Valid', creationTime: '2025-10-30 14:22:00', updateTime: '2024-06-12 09:15:00', sort: 0, clickCount: 0 },
-  { id: 3, number: 53, articleTitle: 'Platform User Agreement', category: 'Platform User Agreement', status: 'Valid', creationTime: '2025-10-28 09:00:00', updateTime: '2024-06-10 11:30:00', sort: 0, clickCount: 0 },
-  { id: 4, number: 52, articleTitle: 'Privacy policy', category: 'Privacy policy', status: 'Valid', creationTime: '2025-10-25 16:45:00', updateTime: '2024-06-08 14:20:00', sort: 0, clickCount: 0 },
-  { id: 5, number: 51, articleTitle: 'Terms of service', category: 'Terms of service', status: 'Invalid', creationTime: '2025-10-20 11:00:00', updateTime: '2024-06-05 10:00:00', sort: 0, clickCount: 0 },
+  { id: 1, number: 55, articleTitle: 'Level', category: 'Level', status: 'Valid', content: '', creationTime: '2025-10-31 10:07:01', updateTime: '2024-06-13 08:58:23', sort: 0, clickCount: 0 },
+  { id: 2, number: 54, articleTitle: 'Withdrawal agreement', category: 'Withdrawal agreement', status: 'Valid', content: '', creationTime: '2025-10-30 14:22:00', updateTime: '2024-06-12 09:15:00', sort: 0, clickCount: 0 },
+  { id: 3, number: 53, articleTitle: 'Platform User Agreement', category: 'Platform User Agreement', status: 'Valid', content: '', creationTime: '2025-10-28 09:00:00', updateTime: '2024-06-10 11:30:00', sort: 0, clickCount: 0 },
+  { id: 4, number: 52, articleTitle: 'Privacy policy', category: 'Privacy policy', status: 'Valid', content: '', creationTime: '2025-10-25 16:45:00', updateTime: '2024-06-08 14:20:00', sort: 0, clickCount: 0 },
+  { id: 5, number: 51, articleTitle: 'Terms of service', category: 'Terms of service', status: 'Invalid', content: '', creationTime: '2025-10-20 11:00:00', updateTime: '2024-06-05 10:00:00', sort: 0, clickCount: 0 },
 ];
 
 let articlesData = [...DEMO_ARTICLES];
@@ -48,6 +48,7 @@ export async function createArticle(payload: ArticlePayload): Promise<Article> {
     articleTitle: payload.articleTitle,
     category: payload.category,
     status: payload.status ?? 'Valid',
+    content: payload.content ?? '',
     creationTime: now,
     updateTime: now,
     sort: payload.sort ?? 0,

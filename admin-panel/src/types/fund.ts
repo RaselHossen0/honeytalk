@@ -1,12 +1,20 @@
 /** Fund Management API-ready types */
 
+export type PaymentType = 'Offline payment' | 'Online Payment' | 'WAP payment' | 'App payment';
+
 export interface PaymentInterface {
   id: number;
   number: number;
   name: string;
+  displayName?: string;
+  categoryName: string;
   status: string;
   receivedPayment: number;
   automaticWithdrawal: 'Yes' | 'No';
+  withdrawalPaymentAccount: string;
+  paymentType: PaymentType;
+  imageUrl: string;
+  description: string;
   sort: number;
 }
 
