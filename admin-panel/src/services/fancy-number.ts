@@ -35,8 +35,8 @@ const DEMO_CONSUMPTION_RECORDS: FancyNumberConsumptionRecord[] = [
   { id: 80199, number: 80199, user: 'StarAnchor', userId: 167001, purchasingGoodAccountName: '2222', consumptionAmount: 2000, time: '2025-12-05 18:40:00' },
   { id: 80050, number: 80050, user: 'Mr.Gx777', userId: 166586, purchasingGoodAccountName: '66666666', consumptionAmount: 600000, time: '2025-11-28 11:20:15' },
   { id: 79900, number: 79900, user: 'Nisha', userId: 166789, purchasingGoodAccountName: '88888888', consumptionAmount: 888, time: '2025-11-20 16:55:42' },
-  { id: 79850, number: 79850, user: '李明', userId: 167002, purchasingGoodAccountName: '12345678', consumptionAmount: 100, time: '2025-11-15 08:30:00' },
-  { id: 79800, number: 79800, user: '王涵', userId: 166600, purchasingGoodAccountName: '55555555', consumptionAmount: 555, time: '2025-11-10 13:45:22' },
+  { id: 79850, number: 79850, user: 'Demo User A', userId: 167002, purchasingGoodAccountName: '12345678', consumptionAmount: 100, time: '2025-11-15 08:30:00' },
+  { id: 79800, number: 79800, user: 'Demo User B', userId: 166600, purchasingGoodAccountName: '55555555', consumptionAmount: 555, time: '2025-11-10 13:45:22' },
   { id: 79750, number: 79750, user: 'Snow', userId: 166589, purchasingGoodAccountName: '77777777', consumptionAmount: 777, time: '2025-11-05 10:10:10' },
 ];
 

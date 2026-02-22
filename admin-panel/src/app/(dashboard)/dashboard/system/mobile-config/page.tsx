@@ -151,7 +151,7 @@ type AppConfigField = {
 
 /** Application Basic Settings fields (44 fields) */
 const APPLICATION_BASIC_FIELDS: AppConfigField[] = [
-  { key: 'default_nickname', label: 'Default nickname after successful registration', type: 'text', notes: 'Default nickname is "布谷+ID"', apiKey: 'default_nickname' },
+  { key: 'default_nickname', label: 'Default nickname after successful registration', type: 'text', notes: 'Default nickname is "User+ID"', apiKey: 'default_nickname' },
   { key: 'view_page_size', label: 'Number of audience lists', type: 'number', notes: 'Number of viewers returned in the live room audience list', apiKey: 'view_page_size' },
   { key: 'is_classify', label: 'Require Forced Category Selection', type: 'toggle_yes_no', notes: 'Do you need to select a category when creating a live stream?', apiKey: 'is_classify' },
   { key: 'is_no_light', label: 'Whether to disable likes', type: 'toggle_yes_no', notes: 'Is the like function on the live page closed?', apiKey: 'is_no_light' },

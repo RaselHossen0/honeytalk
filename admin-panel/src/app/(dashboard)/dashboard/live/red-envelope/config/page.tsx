@@ -104,27 +104,27 @@ export default function RedEnvelopeConfigPage() {
   return (
     <Box>
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tab label="房间红包" sx={{ color: tab === 0 ? 'error.main' : 'text.secondary', fontWeight: tab === 0 ? 600 : 400 }} />
-        <Tab label="世界红包" sx={{ color: tab === 1 ? 'error.main' : 'text.secondary', fontWeight: tab === 1 ? 600 : 400 }} />
+        <Tab label="Room Red Envelope" sx={{ color: tab === 0 ? 'error.main' : 'text.secondary', fontWeight: tab === 0 ? 600 : 400 }} />
+        <Tab label="World Red Envelope" sx={{ color: tab === 1 ? 'error.main' : 'text.secondary', fontWeight: tab === 1 ? 600 : 400 }} />
       </Tabs>
 
       <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Box component="h3" sx={{ m: 0, fontSize: 16, fontWeight: 600 }}>
-            总金额配置 (Room Fortune Bag - Total Amount)
+            Total Amount Config (Room Fortune Bag)
           </Box>
           <Button variant="contained" size="small" startIcon={<Add />} onClick={handleAddAmount}>
-            添加金额
+            Add Amount
           </Button>
         </Box>
         <TableContainer>
           <Table size="small">
             <TableHead>
               <TableRow sx={{ bgcolor: 'grey.50' }}>
-                <TableCell sx={{ fontWeight: 600 }}>金额 (金币)</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>图标 URL</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>排序</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">操作</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Amount (coins)</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Icon URL</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Sort</TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="right">Operation</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -169,7 +169,7 @@ export default function RedEnvelopeConfigPage() {
                   </TableCell>
                   <TableCell align="right">
                     <Button size="small" color="error" startIcon={<Delete />} onClick={() => handleDeleteAmount(row.id)}>
-                      删除
+                      Delete
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -182,19 +182,19 @@ export default function RedEnvelopeConfigPage() {
       <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Box component="h3" sx={{ m: 0, fontSize: 16, fontWeight: 600 }}>
-            发放份数配置 (Room Fortune Bag - Quantity)
+            Quantity Config (Room Fortune Bag)
           </Box>
           <Button variant="contained" size="small" startIcon={<Add />} onClick={handleAddQuantity}>
-            添加份数
+            Add Quantity
           </Button>
         </Box>
         <TableContainer>
           <Table size="small">
             <TableHead>
               <TableRow sx={{ bgcolor: 'grey.50' }}>
-                <TableCell sx={{ fontWeight: 600 }}>份数</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>排序</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">操作</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Quantity</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Sort</TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="right">Operation</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -231,7 +231,7 @@ export default function RedEnvelopeConfigPage() {
                   </TableCell>
                   <TableCell align="right">
                     <Button size="small" color="error" startIcon={<Delete />} onClick={() => handleDeleteQuantity(row.id)}>
-                      删除
+                      Delete
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -243,7 +243,7 @@ export default function RedEnvelopeConfigPage() {
 
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
         <Button variant="contained" color="success" size="large" onClick={handleSave} sx={{ px: 4, py: 1.5 }}>
-          保存配置
+          Save Config
         </Button>
       </Box>
     </Box>

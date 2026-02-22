@@ -36,10 +36,10 @@ const DEMO_MESSAGES: SystemMessage[] = [
 ];
 
 const DEMO_QUEUE: BusinessQueueItem[] = [
-  { id: 1, number: 13395, type: 'SMS', recipient: '860****3628', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:39:20', status: 'Yes', result: 'Failure', logInformation: '测试发送' },
-  { id: 2, number: 13394, type: 'SMS', recipient: '860****3629', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:38:15', status: 'Yes', result: 'Failure', logInformation: '测试发送' },
+  { id: 1, number: 13395, type: 'SMS', recipient: '860****3628', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:39:20', status: 'Yes', result: 'Failure', logInformation: 'Test send' },
+  { id: 2, number: 13394, type: 'SMS', recipient: '860****3629', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:38:15', status: 'Yes', result: 'Failure', logInformation: 'Test send' },
   { id: 3, number: 13393, type: 'SMS', recipient: '861****1234', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '123456', creationTime: '2026-02-17 21:37:00', status: 'Yes', result: 'Success', logInformation: 'Sent' },
-  { id: 4, number: 13392, type: 'SMS', recipient: '919****5678', userId: '166593', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:36:45', status: 'Yes', result: 'Failure', logInformation: '测试发送' },
+  { id: 4, number: 13392, type: 'SMS', recipient: '919****5678', userId: '166593', title: 'SMS verification code', content: 'View', verificationCode: '888888', creationTime: '2026-02-17 21:36:45', status: 'Yes', result: 'Failure', logInformation: 'Test send' },
   { id: 5, number: 13391, type: 'SMS', recipient: '1***5551234', userId: '0', title: 'SMS verification code', content: 'View', verificationCode: '654321', creationTime: '2026-02-17 21:35:30', status: 'Yes', result: 'Success', logInformation: 'Sent' },
 ];
 

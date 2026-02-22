@@ -11,7 +11,7 @@ const DEMO_CATEGORIES: ArticleCategory[] = [
   { id: 3, number: 36, categoryName: 'Platform User Agreement', articleType: 'Regular article', status: 'Valid', sort: 15 },
   { id: 4, number: 35, categoryName: 'Compliance policy', articleType: 'Regular article', status: 'Invalid', sort: 14 },
   { id: 5, number: 34, categoryName: 'Teen Mode', articleType: 'Regular article', status: 'Valid', sort: 13 },
-  { id: 6, number: 33, categoryName: '公告01', articleType: 'Announcement article', status: 'Valid', sort: 12 },
+  { id: 6, number: 33, categoryName: 'Announcement 01', articleType: 'Announcement article', status: 'Valid', sort: 12 },
   { id: 7, number: 32, categoryName: 'Invite reward', articleType: 'Regular article', status: 'Valid', sort: 11 },
   { id: 8, number: 31, categoryName: 'News bulletin', articleType: 'News announcement', status: 'Valid', sort: 10 },
   { id: 9, number: 30, categoryName: 'Community convention', articleType: 'Regular article', status: 'Valid', sort: 9 },

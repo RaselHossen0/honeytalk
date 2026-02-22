@@ -82,7 +82,7 @@ export function EncryptionKeyEditDialog({ item, open, onClose, onSave }: Props) 
             value={key}
             onChange={(e) => setKey(e.target.value)}
             error={!!error}
-            helperText={error || '(长度: 16位)'}
+            helperText={error || '(Length: 16 characters)'}
             placeholder="1400480612000000"
           />
 
