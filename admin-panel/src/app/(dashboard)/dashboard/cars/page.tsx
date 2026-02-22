@@ -24,8 +24,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  IconButton,
 } from '@mui/material';
-import { Add, Edit, Delete, CardGiftcard } from '@mui/icons-material';
+import { Add, Edit, Delete, CardGiftcard, Close } from '@mui/icons-material';
 import { OperationButton } from '@/components/common/OperationButton';
 import { ImageUpload } from '@/components/common/ImageUpload';
 import { useTabsStore } from '@/store/tabs';
@@ -41,6 +42,9 @@ export default function CarListPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [editing, setEditing] = useState<Car | null>(null);
   const [form, setForm] = useState<{ vehicleName: string; vehicleCover: string; sort: number; status: 'Unban' | 'Ban' }>({ vehicleName: '', vehicleCover: '', sort: 0, status: 'Unban' });
+  const [giftsOpen, setGiftsOpen] = useState(false);
+  const [giftsRow, setGiftsRow] = useState<Car | null>(null);
+  const [giftsForm, setGiftsForm] = useState({ userId: '', timeDays: '', note: '' });
 
   useEffect(() => {
     addTab({
@@ -112,6 +116,22 @@ export default function CarListPage() {
     else setSelected([...selected, id]);
   };
 
+  const handleGiftsOpen = (row: Car) => {
+    setGiftsRow(row);
+    setGiftsForm({ userId: '', timeDays: '', note: '' });
+    setGiftsOpen(true);
+  };
+
+  const handleGiftsClose = () => {
+    setGiftsOpen(false);
+    setGiftsRow(null);
+  };
+
+  const handleGiftsConfirm = () => {
+    // TODO: API call with giftsForm and giftsRow
+    handleGiftsClose();
+  };
+
   return (
     <Box>
       <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 2, minWidth: 0 }}>
@@ -163,7 +183,7 @@ export default function CarListPage() {
                   <TableCell align="right" sx={{ width: 56 }}>
                     <OperationButton
                       items={[
-                        { label: 'Gifts', onClick: () => {}, icon: <CardGiftcard fontSize="small" /> },
+                        { label: 'Gifts', onClick: () => handleGiftsOpen(row), icon: <CardGiftcard fontSize="small" /> },
                         { label: 'Edit', onClick: () => handleEdit(row), icon: <Edit fontSize="small" /> },
                       ]}
                       dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
@@ -229,6 +249,45 @@ export default function CarListPage() {
         <DialogActions>
           <Button onClick={() => setEditOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleSave}>Save</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={giftsOpen} onClose={handleGiftsClose} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          Gifts
+          <IconButton size="small" onClick={handleGiftsClose} aria-label="Close">
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+          <TextField
+            label="User ID"
+            value={giftsForm.userId}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, userId: e.target.value }))}
+            fullWidth
+            size="small"
+          />
+          <TextField
+            label="Time(Days)"
+            value={giftsForm.timeDays}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, timeDays: e.target.value }))}
+            fullWidth
+            size="small"
+            placeholder="e.g. 7"
+          />
+          <TextField
+            label="Note"
+            value={giftsForm.note}
+            onChange={(e) => setGiftsForm((f) => ({ ...f, note: e.target.value }))}
+            fullWidth
+            size="small"
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button onClick={handleGiftsClose}>Cancel</Button>
+          <Button variant="contained" onClick={handleGiftsConfirm}>
+            Confirm
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

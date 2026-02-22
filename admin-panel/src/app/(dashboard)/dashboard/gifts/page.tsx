@@ -158,6 +158,37 @@ export default function GiftListPage() {
     setPage(0);
   };
 
+  const stickyFirst = {
+    position: 'sticky' as const,
+    left: 0,
+    zIndex: 3,
+    minWidth: 48,
+    width: 48,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyNumber = {
+    position: 'sticky' as const,
+    left: 48,
+    zIndex: 3,
+    minWidth: 80,
+    width: 80,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyLast = {
+    position: 'sticky' as const,
+    right: 0,
+    zIndex: 3,
+    minWidth: 100,
+    width: 100,
+    bgcolor: 'grey.50',
+    boxShadow: '-2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyFirstBody = (bg: string) => ({ ...stickyFirst, zIndex: 2, bgcolor: bg });
+  const stickyNumberBody = (bg: string) => ({ ...stickyNumber, zIndex: 2, bgcolor: bg });
+  const stickyLastBody = (bg: string) => ({ ...stickyLast, zIndex: 2, bgcolor: bg });
+
   const types = Array.from(new Set(data.map((r) => r.type)));
   const animations = Array.from(new Set(data.map((r) => r.displayAnimation)));
 
@@ -212,18 +243,18 @@ export default function GiftListPage() {
       </Paper>
 
       <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 2 }}>
-        <TableContainer sx={{ maxHeight: 520, overflowX: 'auto' }}>
-          <Table size="small" stickyHeader>
+        <TableContainer sx={{ maxHeight: 520, overflowX: 'auto', overflowY: 'auto', width: '100%' }}>
+          <Table size="small" stickyHeader sx={{ minWidth: 1400 }}>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox" sx={{ bgcolor: 'grey.50' }}>
+                <TableCell padding="checkbox" sx={{ ...stickyFirst, bgcolor: 'grey.50' }}>
                   <Checkbox
                     indeterminate={selected.length > 0 && selected.length < paginatedRows.length}
                     checked={paginatedRows.length > 0 && selected.length === paginatedRows.length}
                     onChange={handleSelectAll}
                   />
                 </TableCell>
-                <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 80 }}>Number</TableCell>
+                <TableCell sx={{ ...stickyNumber, fontWeight: 600, bgcolor: 'grey.50' }}>Number</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 120 }}>Name</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 70 }}>Image</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 80 }}>Points</TableCell>
@@ -234,16 +265,18 @@ export default function GiftListPage() {
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 120 }}>Display animation</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 80 }}>Status</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 70 }}>Sort</TableCell>
-                <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 140 }} align="right">Operation</TableCell>
+                <TableCell sx={{ ...stickyLast, fontWeight: 600, bgcolor: 'grey.50' }} align="right">Operation</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedRows.map((row) => (
+              {paginatedRows.map((row, index) => (
                 <TableRow key={row.id} hover selected={selected.includes(row.id)} sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" sx={stickyFirstBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
                     <Checkbox checked={selected.includes(row.id)} onChange={() => handleSelectOne(row.id)} />
                   </TableCell>
-                  <TableCell>{row.number}</TableCell>
+                  <TableCell sx={stickyNumberBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                    {row.number}
+                  </TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>
                     <Box sx={{ width: 40, height: 40, position: 'relative', borderRadius: 1, overflow: 'hidden' }}>
@@ -258,7 +291,7 @@ export default function GiftListPage() {
                   <TableCell>{row.displayAnimation}</TableCell>
                   <TableCell>{row.status}</TableCell>
                   <TableCell>{row.sort}</TableCell>
-                  <TableCell align="right" sx={{ width: 56 }}>
+                  <TableCell align="right" sx={{ ...stickyLastBody(index % 2 === 1 ? 'grey.50' : 'background.paper'), whiteSpace: 'nowrap' }}>
                     <OperationButton
                       items={[{ label: 'Edit', onClick: () => handleEdit(row), icon: <Edit fontSize="small" /> }]}
                       dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
