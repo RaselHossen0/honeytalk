@@ -67,6 +67,27 @@ export default function DurationTaskLogsPage() {
     setPage(0);
   };
 
+  const stickyFirst = {
+    position: 'sticky' as const,
+    left: 0,
+    zIndex: 3,
+    minWidth: 90,
+    width: 90,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyLast = {
+    position: 'sticky' as const,
+    right: 0,
+    zIndex: 3,
+    minWidth: 165,
+    width: 165,
+    bgcolor: 'grey.50',
+    boxShadow: '-2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyFirstBody = (bg: string) => ({ ...stickyFirst, zIndex: 2, bgcolor: bg });
+  const stickyLastBody = (bg: string) => ({ ...stickyLast, zIndex: 2, bgcolor: bg });
+
   return (
     <Box>
       <Paper sx={{ p: 2, mb: 2, borderRadius: 2 }}>
@@ -106,37 +127,43 @@ export default function DurationTaskLogsPage() {
         </Box>
       </Paper>
 
-      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2, overflowX: 'auto' }}>
-        <Table size="small">
-          <TableHead>
-            <TableRow sx={{ bgcolor: 'grey.50' }}>
-              <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>User ID</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>User nickname</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 150 }}>Video duration (minutes)</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>reward</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 110 }}>Room number</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 165 }}>Creation time</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 165 }}>Expiration time</TableCell>
-              <TableCell sx={{ fontWeight: 600, minWidth: 165 }}>Update Time</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedRows.map((row) => (
-              <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
-                <TableCell>{row.userId}</TableCell>
-                <TableCell>{row.userNickname}</TableCell>
-                <TableCell>{row.videoDurationMinutes}</TableCell>
-                <TableCell>{row.reward}</TableCell>
-                <TableCell>{row.status}</TableCell>
-                <TableCell>{row.roomNumber}</TableCell>
-                <TableCell>{row.creationTime}</TableCell>
-                <TableCell>{row.expirationTime}</TableCell>
-                <TableCell>{row.updateTime}</TableCell>
+      <Paper variant="outlined" sx={{ borderRadius: 2, overflow: 'hidden' }}>
+        <TableContainer sx={{ overflowX: 'auto', overflowY: 'visible', width: '100%' }}>
+          <Table size="small" sx={{ minWidth: 1200 }}>
+            <TableHead>
+              <TableRow sx={{ bgcolor: 'grey.50' }}>
+                <TableCell sx={{ ...stickyFirst, fontWeight: 600 }}>User ID</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 120 }}>User nickname</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 150 }}>Video duration (minutes)</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 100 }}>reward</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 90 }}>Status</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 110 }}>Room number</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 165 }}>Creation time</TableCell>
+                <TableCell sx={{ fontWeight: 600, minWidth: 165 }}>Expiration time</TableCell>
+                <TableCell sx={{ ...stickyLast, fontWeight: 600 }}>Update Time</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {paginatedRows.map((row, index) => (
+                <TableRow key={row.id} hover sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
+                  <TableCell sx={stickyFirstBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                    {row.userId}
+                  </TableCell>
+                  <TableCell>{row.userNickname}</TableCell>
+                  <TableCell>{row.videoDurationMinutes}</TableCell>
+                  <TableCell>{row.reward}</TableCell>
+                  <TableCell>{row.status}</TableCell>
+                  <TableCell>{row.roomNumber}</TableCell>
+                  <TableCell>{row.creationTime}</TableCell>
+                  <TableCell>{row.expirationTime}</TableCell>
+                  <TableCell sx={stickyLastBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                    {row.updateTime}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <TablePagination
           component="div"
           count={filtered.length}
@@ -150,7 +177,7 @@ export default function DurationTaskLogsPage() {
           rowsPerPageOptions={[10, 25, 50]}
           labelRowsPerPage="per page"
         />
-      </TableContainer>
+      </Paper>
     </Box>
   );
 }

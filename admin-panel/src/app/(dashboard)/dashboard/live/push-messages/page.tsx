@@ -129,6 +129,37 @@ export default function PushMessagesPage() {
     setPage(0);
   };
 
+  const stickyFirst = {
+    position: 'sticky' as const,
+    left: 0,
+    zIndex: 3,
+    minWidth: 48,
+    width: 48,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyNumber = {
+    position: 'sticky' as const,
+    left: 48,
+    zIndex: 3,
+    minWidth: 90,
+    width: 90,
+    bgcolor: 'grey.50',
+    boxShadow: '2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyLast = {
+    position: 'sticky' as const,
+    right: 0,
+    zIndex: 3,
+    minWidth: 100,
+    width: 100,
+    bgcolor: 'grey.50',
+    boxShadow: '-2px 0 4px -2px rgba(0,0,0,0.08)',
+  };
+  const stickyFirstBody = (bg: string) => ({ ...stickyFirst, zIndex: 2, bgcolor: bg });
+  const stickyNumberBody = (bg: string) => ({ ...stickyNumber, zIndex: 2, bgcolor: bg });
+  const stickyLastBody = (bg: string) => ({ ...stickyLast, zIndex: 2, bgcolor: bg });
+
   return (
     <Box>
       <Paper sx={{ p: 2, mb: 2, borderRadius: 2 }}>
@@ -201,18 +232,18 @@ export default function PushMessagesPage() {
       </Paper>
 
       <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 2 }}>
-        <TableContainer sx={{ maxHeight: 520 }}>
-          <Table stickyHeader size="small">
+        <TableContainer sx={{ maxHeight: 520, overflowX: 'auto', overflowY: 'auto', width: '100%' }}>
+          <Table stickyHeader size="small" sx={{ minWidth: 1400 }}>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox" sx={{ bgcolor: 'grey.50' }}>
+                <TableCell padding="checkbox" sx={{ ...stickyFirst, bgcolor: 'grey.50' }}>
                   <Checkbox
                     indeterminate={selected.length > 0 && selected.length < paginatedRows.length}
                     checked={paginatedRows.length > 0 && selected.length === paginatedRows.length}
                     onChange={handleSelectAll}
                   />
                 </TableCell>
-                <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 90 }}>Number</TableCell>
+                <TableCell sx={{ ...stickyNumber, fontWeight: 600, bgcolor: 'grey.50' }}>Number</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 100 }}>Anchor ID</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 160 }}>Anchor Nickname</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 160 }}>Live Stream Title</TableCell>
@@ -220,18 +251,20 @@ export default function PushMessagesPage() {
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 140 }}>Live broadcast cities</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 110 }}>Status</TableCell>
                 <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 165 }}>Creation time</TableCell>
-                <TableCell sx={{ fontWeight: 600, bgcolor: 'grey.50', minWidth: 100 }} align="right">
+                <TableCell sx={{ ...stickyLast, fontWeight: 600, bgcolor: 'grey.50' }} align="right">
                   Operation
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedRows.map((row) => (
+              {paginatedRows.map((row, index) => (
                 <TableRow key={row.id} hover selected={selected.includes(row.id)} sx={{ '&:nth-of-type(even)': { bgcolor: 'grey.50' } }}>
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" sx={stickyFirstBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
                     <Checkbox checked={selected.includes(row.id)} onChange={() => handleSelectOne(row.id)} />
                   </TableCell>
-                  <TableCell>{row.number}</TableCell>
+                  <TableCell sx={stickyNumberBody(index % 2 === 1 ? 'grey.50' : 'background.paper')}>
+                    {row.number}
+                  </TableCell>
                   <TableCell>{row.anchorId}</TableCell>
                   <TableCell>{row.anchorNickname}</TableCell>
                   <TableCell>{row.liveStreamTitle}</TableCell>
@@ -239,7 +272,7 @@ export default function PushMessagesPage() {
                   <TableCell>{row.liveBroadcastCities}</TableCell>
                   <TableCell>{row.status}</TableCell>
                   <TableCell>{row.creationTime}</TableCell>
-                  <TableCell align="right" sx={{ width: 56 }}>
+                  <TableCell align="right" sx={{ ...stickyLastBody(index % 2 === 1 ? 'grey.50' : 'background.paper'), whiteSpace: 'nowrap' }}>
                     <OperationButton
                       dangerItems={[{ label: 'Delete', onClick: () => handleDelete(row), icon: <Delete fontSize="small" /> }]}
                     />
